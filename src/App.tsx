@@ -1,11 +1,15 @@
 import { useState, ChangeEvent } from "react";
 import JSZip from "jszip";
+//@ts-ignore
+import InputScreen from "./components/InputScreen.tsx";
 
 function App() {
-    let [container, setContainer] = useState<string | Document>("");
+    let [content, setContent] = useState<string | Document>("");
+    let [isLoading, setIsLoading] = useState(false);
     let style = "";
 
     function handleFileInput(event: ChangeEvent<HTMLInputElement>) {
+        setIsLoading(true);
         let reader = new FileReader();
 
         if (event.target.files && event.target.files.length > 0) {
@@ -36,7 +40,7 @@ function App() {
                     let folder = getContainingFolder(obfLocation);
                     let obfFile = zip.file(obfLocation);
                     let obf = await obfFile?.async("text");
-                    getChapters(obf as string, folder, zip, folder);
+                    parseManifest(obf as string, folder, zip, folder);
                     // getStyling(obf as string, zip, folder);
                 }
             }
@@ -64,7 +68,7 @@ function App() {
 
     let images: any = {};
 
-    async function getChapters(
+    async function parseManifest(
         file: string,
         folder: string,
         zip: JSZip,
@@ -108,8 +112,9 @@ function App() {
                 }
             }
         }
-        setContainer(contents); // Update state once with all contents
+        setContent(contents); // Update state once with all contents
         addStyling();
+        setIsLoading(false); // Move setIsLoading(false) here
     }
 
     function getContainingFolder(location: string) {
@@ -155,8 +160,8 @@ function App() {
                 }
             }
 
-            let images = newDocument.querySelectorAll("image");
-            for (let image of images) {
+            let xmlImages = newDocument.querySelectorAll("image");
+            for (let image of xmlImages) {
                 let src = image.getAttribute("xlink:href") as string;
                 while (src[0] === "." || src[0] === "/") src = src.slice(1);
                 src = obfLocation + src;
@@ -193,13 +198,9 @@ function App() {
         document.head.appendChild(link);
     }
 
-    function Book({ content }: any) {
-        if (content === null) {
-            return <div>Something not working</div>;
-        }
-
+    function RawBook({ content }: any) {
         return (
-            <div className="chapters">
+            <div className="page">
                 <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
         );
@@ -207,15 +208,16 @@ function App() {
 
     return (
         <>
-            <h1>Bok</h1>
-            <div className="card">
-                <input
-                    type="file"
-                    id="fileInput"
-                    accept=".epub"
-                    onChange={handleFileInput}
+            {!content ? (
+                <InputScreen
+                    isLoading={isLoading}
+                    handleFileInput={handleFileInput}
                 />
-                <Book content={container} />
+            ) : (
+                <></>
+            )}
+            <div className="card">
+                <RawBook content={content} />
             </div>
         </>
     );

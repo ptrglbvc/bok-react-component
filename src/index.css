@@ -13,14 +13,30 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.chapters {
-    width: 80vw;
-    margin-left: auto;
-    margin-right: auto;
+.page {
+    padding-top: 5vw;
+    padding-left: 10vw;
+    padding-right: 10vw;
 }
 
-.chapters img {
+.page img {
     max-width: 70vw;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 50px;
+    border-radius: 20px;
+}
+
+.page {
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input > * {
+    margin-top: 30px;
 }
