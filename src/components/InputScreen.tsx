@@ -1,6 +1,6 @@
 import { PropagateLoader } from "react-spinners";
 
-interface InputScreenType {
+interface InputScreenProps {
     isLoading: boolean;
     handleFileInput: () => void;
 }
@@ -8,7 +8,7 @@ interface InputScreenType {
 export default function InputScreen({
     isLoading,
     handleFileInput,
-}: InputScreenType) {
+}: InputScreenProps) {
     return (
         <div className="input">
             <h1>Bok</h1>

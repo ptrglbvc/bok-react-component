@@ -2,10 +2,11 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
+    text-align: justify;
 
     color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: black;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -13,17 +14,19 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.page {
+.book-page {
+    margin: 0 0 0 0;
     padding-top: 5vw;
     padding-left: 10vw;
     padding-right: 10vw;
 }
 
-.page img {
+.book-page img {
     max-width: 70vw;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
+    margin-top: 30px;
     border-radius: 20px;
 }
 
