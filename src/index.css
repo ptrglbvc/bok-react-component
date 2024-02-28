@@ -1,32 +1,58 @@
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
+    line-gap-override: 10;
     font-weight: 400;
+    font-size: large;
     text-align: justify;
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.8);
     background-color: black;
+    overflow-y: hidden;
+    overflow-x: hidden;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --book-padding: 50px;
 }
 
 .book-page {
-    margin: 0 0 0 0;
-    padding-top: 5vw;
-    padding-left: 10vw;
-    padding-right: 10vw;
+    margin: 0;
+    padding: var(--book-padding);
+    column-gap: calc(2 * var(--book-padding));
+    column-fill: balance;
+    height: 85vh;
+    overflow: auto;
+    -moz-column-gap: calc(2 * var(--book-padding));
+    -webkit-column-gap: calc(2 * var(--book-padding));
+}
+
+@media screen and (orientation: landscape) {
+    .book-page {
+        width: calc(100vw - 2 * var(--book-padding));
+        column-count: 2;
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+    }
+}
+
+@media screen and (orientation: portrait) {
+    .book-page {
+        width: calc(100vw - 2 * var(--book-padding));
+        column-count: 1; /* Creates exactly two columns */
+        -moz-column-count: 1;
+        -webkit-column-count: 1;
+    }
 }
 
 .book-page img {
-    max-width: 70vw;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
-    margin-top: 30px;
     border-radius: 20px;
 }
 
@@ -42,4 +68,14 @@
 
 .input > * {
     margin-top: 30px;
+}
+
+.page-number {
+    position: absolute;
+    top: 94vh;
+    left: 50vw;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: gray;
+    transition: all 0.3s ease-in-out;
 }

@@ -96,14 +96,6 @@ export default function useEpub() {
             let itemType = item.getAttribute("media-type") as string;
             let itemFile = (zip as JSZip).file(obfFolder + itemLocation); // Use the variable correctly
             if (itemType.includes("image")) {
-                if (itemFile) {
-                    if (images[itemLocation] === undefined) {
-                        let itemContents = await itemFile.async("blob");
-                        let blobURL = URL.createObjectURL(itemContents);
-                        images[itemLocation] = blobURL;
-                    }
-                    contents += `<img src=${images[itemLocation]}>`;
-                }
             } else if (itemType.includes("css")) {
                 if (itemFile) {
                     style += await itemFile.async("text");
@@ -121,7 +113,7 @@ export default function useEpub() {
                 }
             }
         }
-        toggleFullScreen();
+        // toggleFullScreen();
         addStyling();
         setRawContent(contents); // Update state once with all contents
         setIsLoading(false); // Move setIsLoading(false) here
