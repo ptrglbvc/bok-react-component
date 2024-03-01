@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="bookid" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<metadata>
+<dc:title>Война</dc:title>
+<dc:creator>Андрей Платонович Платонов</dc:creator>
+<dc:language>ru</dc:language>
+<meta name="FB2.book-info.date" content=""/>
+<meta name="FB2.document-info.program-used" content="LibRusEc kit, Fiction Book Investigator, FB Editor v2.0"/>
+<meta name="FB2.document-info.history" content="1.0 — создание документа, LibRusEc kit 1.1 — форматирование, оформление сносок, «генеральная уборка», проверка скриптами, 31.05.2009 by golma1 "/>
+<meta name="FB2.document-info.id" content="Tue Jun 11 17:48:11 2013"/>
+<meta name="FB2.document-info.version" content="1.1"/>
+<meta name="FB2.document-info.date" content=""/>
+<dc:identifier id="bookid">urn:uuid:bfd4e9ca-8dd1-429c-a2e6-c6f447b2d91c</dc:identifier>
+<dc:identifier id="bookid1">Tue Jun 11 17:48:11 2013</dc:identifier>
+<meta name="FB2EPUB.version" content="0.5.0"/>
+<meta name="FB2EPUB.conversionDate" content="2017-12-28T21:37:00+07:00"/>
+</metadata>
+<manifest>
+<item href="style.css" media-type="text/css" id="id1"/>
+<item href="ch1.xhtml" media-type="application/xhtml+xml" id="id2"/>
+<item href="toc.ncx" media-type="application/x-dtbncx+xml" id="id3"/>
+<item href="ch2.xhtml" media-type="application/xhtml+xml" id="id4"/>
+</manifest>
+<spine toc="id3">
+<itemref idref="id2"/>
+<itemref idref="id4"/>
+</spine>
+</package>

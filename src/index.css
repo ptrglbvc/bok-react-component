@@ -25,7 +25,7 @@
     padding: var(--book-padding);
     column-gap: calc(2 * var(--book-padding));
     column-fill: balance;
-    height: 85vh;
+    height: 85svh;
     overflow: auto;
     -moz-column-gap: calc(2 * var(--book-padding));
     -webkit-column-gap: calc(2 * var(--book-padding));
@@ -54,6 +54,7 @@
     margin-right: auto;
     margin-bottom: 50px;
     border-radius: 20px;
+    max-height: 85svh;
 }
 
 .page {
@@ -66,13 +67,17 @@
     justify-content: center;
 }
 
+.book-chapter {
+    margin-bottom: 100vh;
+}
+
 .input > * {
     margin-top: 30px;
 }
 
 .page-number {
     position: absolute;
-    top: 94vh;
+    top: 94svh;
     left: 50vw;
     transform: translateX(-50%);
     font-size: 13px;

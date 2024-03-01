@@ -1,0 +1,6 @@
+nav#landmarks {
+  display: none;
+}
+ol {
+  list-style-type: none;
+}

@@ -108,7 +108,9 @@ export default function useEpub() {
                             itemContents,
                             itemType
                         );
-                        contents += cleanItemContents; // Accumulate contents
+                        let evenMoreCleanItemContents =
+                            formatChapters(cleanItemContents);
+                        contents += evenMoreCleanItemContents; // Accumulate contents
                     }
                 }
             }
@@ -119,12 +121,8 @@ export default function useEpub() {
         setIsLoading(false); // Move setIsLoading(false) here
     }
 
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
+    function formatChapters(content: string): string {
+        return "<div class='book-chapter'>" + content + "</div>";
     }
 
     function getContainingFolder(location: string) {
@@ -157,18 +155,21 @@ export default function useEpub() {
         while (src[0] === "." || src[0] === "/") src = src.slice(1);
         src = obfFolder + src;
         //@ts-ignore
-        if (images[src]) {
+        if (!images[src]) {
             //@ts-ignore
-            img.setAttribute("src", images[src]);
-        } else {
             let blob = await (zip as JSZip).file(src)?.async("blob");
             if (blob) {
                 let url = URL.createObjectURL(blob);
                 //@ts-ignore
                 images[src] = url;
-                img.setAttribute("src", url);
+                img.setAttribute("src", images[src]);
             }
         }
+        img.setAttribute("src", images[src]);
+        img.setAttribute(
+            "style",
+            "max-height: calc(100svh - 2*var(--book-padding)) !important;"
+        );
     }
 
     async function formatXMLImage(image: Element) {

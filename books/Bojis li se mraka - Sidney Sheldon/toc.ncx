@@ -1,0 +1,417 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="srp">
+  <head>
+    <meta content="156cd2f7-c409-409f-9e49-4f6042ba238f" name="dtb:uid"/>
+    <meta content="3" name="dtb:depth"/>
+    <meta content="calibre (0.9.26)" name="dtb:generator"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Bojiš li se mraka</text>
+  </docTitle>
+  <navMap>
+    <navPoint class="chapter" id="navPoint-1" playOrder="1">
+      <navLabel>
+        <text>PROLOG</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_001.htm"/>
+      <navPoint class="chapter" id="navPoint-2" playOrder="2">
+        <navLabel>
+          <text>Berlin, Nemačka</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_002.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-3" playOrder="3">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_003.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-4" playOrder="4">
+        <navLabel>
+          <text>Denver, Kolorado</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_004.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-5" playOrder="5">
+        <navLabel>
+          <text>Menhetn, Njujork</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_005.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-6" playOrder="6">
+      <navLabel>
+        <text>PRVO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_006.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-7" playOrder="7">
+      <navLabel>
+        <text>DRUGO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_007.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-8" playOrder="8">
+      <navLabel>
+        <text>TREĆE POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_008.htm"/>
+      <navPoint class="chapter" id="navPoint-9" playOrder="9">
+        <navLabel>
+          <text>Berlin, Nemačka</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_009.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-10" playOrder="10">
+      <navLabel>
+        <text>ČETVRTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_010.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-11" playOrder="11">
+      <navLabel>
+        <text>PETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_011.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-12" playOrder="12">
+      <navLabel>
+        <text>ŠESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_012.htm"/>
+      <navPoint class="chapter" id="navPoint-13" playOrder="13">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_013.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-14" playOrder="14">
+      <navLabel>
+        <text>SEDMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_014.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-15" playOrder="15">
+      <navLabel>
+        <text>OSMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_015.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-16" playOrder="16">
+      <navLabel>
+        <text>DEVETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_016.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-17" playOrder="17">
+      <navLabel>
+        <text>DESETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_017.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-18" playOrder="18">
+      <navLabel>
+        <text>JEDANAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_018.htm"/>
+      <navPoint class="chapter" id="navPoint-19" playOrder="19">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_019.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-20" playOrder="20">
+        <navLabel>
+          <text>Menhetn, Njujork</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_020.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-21" playOrder="21">
+        <navLabel>
+          <text>Vašington, DC</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_021.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-22" playOrder="22">
+      <navLabel>
+        <text>DVANAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_022.htm"/>
+      <navPoint class="chapter" id="navPoint-23" playOrder="23">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_023.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-24" playOrder="24">
+      <navLabel>
+        <text>TRINAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_024.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-25" playOrder="25">
+      <navLabel>
+        <text>ČETRNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_025.htm"/>
+      <navPoint class="chapter" id="navPoint-26" playOrder="26">
+        <navLabel>
+          <text>Menhetn, Njujork</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_026.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-27" playOrder="27">
+      <navLabel>
+        <text>PETNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_027.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-28" playOrder="28">
+      <navLabel>
+        <text>ŠESNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_028.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-29" playOrder="29">
+      <navLabel>
+        <text>SEDAMNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_029.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-30" playOrder="30">
+      <navLabel>
+        <text>OSAMNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_030.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-31" playOrder="31">
+      <navLabel>
+        <text>DEVETNAESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_031.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-32" playOrder="32">
+      <navLabel>
+        <text>DVADESETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_032.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-33" playOrder="33">
+      <navLabel>
+        <text>DVADESETPRVO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_033.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-34" playOrder="34">
+      <navLabel>
+        <text>DVADESETDRUGO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_034.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-35" playOrder="35">
+      <navLabel>
+        <text>DVADESETTREĆE POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_035.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-36" playOrder="36">
+      <navLabel>
+        <text>DVADESETČETVRTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_036.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-37" playOrder="37">
+      <navLabel>
+        <text>DVADESETPETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_037.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-38" playOrder="38">
+      <navLabel>
+        <text>DVADESETŠESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_038.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-39" playOrder="39">
+      <navLabel>
+        <text>DVADESETSEDMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_039.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-40" playOrder="40">
+      <navLabel>
+        <text>DVADESETOSMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_040.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-41" playOrder="41">
+      <navLabel>
+        <text>DVADESETDEVETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_041.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-42" playOrder="42">
+      <navLabel>
+        <text>TRIDESETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_042.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-43" playOrder="43">
+      <navLabel>
+        <text>TRIDESETPRVO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_043.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-44" playOrder="44">
+      <navLabel>
+        <text>TRIDESETDRUGO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_044.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-45" playOrder="45">
+      <navLabel>
+        <text>TRIDESETTREĆE POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_045.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-46" playOrder="46">
+      <navLabel>
+        <text>TRIDESETČETVRTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_046.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-47" playOrder="47">
+      <navLabel>
+        <text>TRIDESETPETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_047.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-48" playOrder="48">
+      <navLabel>
+        <text>TRIDESETŠESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_048.htm"/>
+      <navPoint class="chapter" id="navPoint-49" playOrder="49">
+        <navLabel>
+          <text>Berlin, Nemačka</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_049.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-50" playOrder="50">
+        <navLabel>
+          <text>Menhetn, Njujork</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_050.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-51" playOrder="51">
+      <navLabel>
+        <text>TRIDESETSEDMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_051.htm"/>
+      <navPoint class="chapter" id="navPoint-52" playOrder="52">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_052.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-53" playOrder="53">
+      <navLabel>
+        <text>TRIDESETOSMO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_053.htm"/>
+      <navPoint class="chapter" id="navPoint-54" playOrder="54">
+        <navLabel>
+          <text>Berlin, Nemačka</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_054.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-55" playOrder="55">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_055.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-56" playOrder="56">
+        <navLabel>
+          <text>Menhetn, Njujork</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_056.htm"/>
+      </navPoint>
+      <navPoint class="chapter" id="navPoint-57" playOrder="57">
+        <navLabel>
+          <text>Pariz, Francuska</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_057.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-58" playOrder="58">
+      <navLabel>
+        <text>TRIDESETDEVETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_058.htm"/>
+      <navPoint class="chapter" id="navPoint-59" playOrder="59">
+        <navLabel>
+          <text>Denver, Kolorado</text>
+        </navLabel>
+        <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_059.htm"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-60" playOrder="60">
+      <navLabel>
+        <text>ČETRDESETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_060.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-61" playOrder="61">
+      <navLabel>
+        <text>ČETRDESETPRVO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_061.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-62" playOrder="62">
+      <navLabel>
+        <text>ČETRDESETDRUGO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_062.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-63" playOrder="63">
+      <navLabel>
+        <text>ČETRDESETTREĆE POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_063.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-64" playOrder="64">
+      <navLabel>
+        <text>ČETRDESETČETVRTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_064.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-65" playOrder="65">
+      <navLabel>
+        <text>ČETRDESETPETO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_065.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-66" playOrder="66">
+      <navLabel>
+        <text>ČETRDESETŠESTO POGLAVLJE</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_066.htm"/>
+    </navPoint>
+    <navPoint class="chapter" id="navPoint-67" playOrder="67">
+      <navLabel>
+        <text>EPILOG</text>
+      </navLabel>
+      <content src="OEBPS/Text/Bojis%20li%20se%20mraka%20-%20Sidney%20Sheldon_split_067.htm"/>
+    </navPoint>
+  </navMap>
+</ncx>

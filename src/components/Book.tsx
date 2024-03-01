@@ -16,10 +16,47 @@ export default function Book({ content, title }: PageProps) {
     let [pageWidth, pageHeight, noOfPages] = usePage();
     let bookRef = useRef<HTMLDivElement>(null);
 
-    let [currentPage, setCurrentPage] = useState(1);
+    let [currentPage, setCurrentPage] = useState(0);
     let [pageCount, setPageCount] = useState(0);
     let [percentRead, setPercentRead] = useState(0);
 
+    useEffect(() => {
+        calculateThePages();
+        document.addEventListener("keydown", turnPage);
+
+        return () => {
+            document.removeEventListener("keydown", turnPage);
+        };
+    }, [pageHeight, pageWidth, padding]);
+
+    useEffect(() => {
+        if (noOfPages === 1) toggleFullScreen();
+        setTimeout(calculateThePages, 500);
+    }, []);
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+
+    const calculateThePages = () => {
+        if (bookRef.current) {
+            let totalWidth = bookRef.current.scrollWidth;
+            let pageWidth = window.innerWidth;
+            let newPageCount = Math.ceil(totalWidth / pageWidth);
+            setPageCount(newPageCount);
+            pageCount = newPageCount;
+
+            let perc = pageCount === 0 ? 1 : currentPage / pageCount;
+            updatePage(newPageCount, perc);
+
+            percentRead = currentPage / newPageCount;
+            setPercentRead(percentRead);
+        }
+    };
     function turnPage(event: KeyboardEvent) {
         event.preventDefault();
         bookRef.current?.focus;
@@ -46,29 +83,9 @@ export default function Book({ content, title }: PageProps) {
             setCurrentPage(newPage);
             bookRef.current.focus();
             bookRef.current.scrollLeft = 0;
+            bookRef.current.scrollLeft = newPage * window.innerWidth;
         }
     }
-
-    useEffect(() => {
-        if (bookRef.current) {
-            let totalWidth = bookRef.current.scrollWidth;
-            let pageWidth = window.innerWidth;
-
-            let newPageCount = Math.ceil(totalWidth / pageWidth);
-
-            let perc = currentPage / pageCount;
-
-            setPageCount(newPageCount);
-            pageCount = newPageCount;
-
-            updatePage(newPageCount, perc);
-            percentRead = currentPage / newPageCount;
-            setPercentRead(percentRead);
-
-            document.addEventListener("keydown", turnPage);
-            return () => document.removeEventListener("keydown", turnPage);
-        }
-    }, [pageHeight, pageWidth, padding]);
 
     return (
         <div>

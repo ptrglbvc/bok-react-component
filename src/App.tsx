@@ -14,7 +14,7 @@ function App() {
                     handleFileInput={handleFileInput}
                 />
             ) : (
-                <Book content={rawContent} />
+                <Book content={rawContent as string} title="" />
             )}
         </>
     );
