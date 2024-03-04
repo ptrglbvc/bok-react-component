@@ -1,0 +1,49 @@
+.input {
+    background-color: #000;
+    color: #fff;
+    font-family: "Arial", sans-serif;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+}
+
+.input h1 {
+    color: rgb(173, 30, 30);
+    margin-bottom: 20px;
+}
+
+.input input[type="file"] {
+    font-family: "Arial", sans-serif;
+    color: rgb(173, 30, 30);
+    background-color: #222;
+    border: 2px solid rgb(173, 30, 30);
+    border-radius: 4px;
+    padding: 10px 15px;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.input input[type="file"]::file-selector-button {
+    color: rgb(173, 30, 30);
+    background-color: #333;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.input input[type="file"]:hover::file-selector-button {
+    background-color: rgb(173, 30, 30);
+    color: #000;
+}
+
+.input input[type="file"]:focus {
+    box-shadow: 10px 5px 5px red;
+    transition: all 0.3s;
+}
