@@ -4,7 +4,7 @@ import useEpub from "./hooks/useEpub.tsx";
 import Book from "./components/Book.tsx";
 
 function App() {
-    let [rawContent, isLoading, handleFileInput] = useEpub();
+    let { title, rawContent, isLoading, handleFileInput } = useEpub();
 
     return (
         <>
@@ -14,7 +14,7 @@ function App() {
                     handleFileInput={handleFileInput}
                 />
             ) : (
-                <Book content={rawContent as string} title="" />
+                <Book content={rawContent as string} title={title} />
             )}
         </>
     );

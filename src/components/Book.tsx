@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import usePage from "../hooks/usePage.tsx";
+import usePercentageRead from "../hooks/usePercentageRead.tsx";
+
 import PageNumber from "./PageNumber.tsx";
+import Navigation from "./Navigation.tsx";
 
 interface PageProps {
     content: string;
@@ -15,10 +18,10 @@ export default function Book({ content, title }: PageProps) {
     //@ts-ignore
     let [pageWidth, pageHeight, noOfPages] = usePage();
     let bookRef = useRef<HTMLDivElement>(null);
+    let percentRead = usePercentageRead(bookRef);
 
-    let [currentPage, setCurrentPage] = useState(0);
+    let [currentPage, setCurrentPage] = useState(1);
     let [pageCount, setPageCount] = useState(0);
-    let [percentRead, setPercentRead] = useState(0);
 
     useEffect(() => {
         calculateThePages();
@@ -30,33 +33,25 @@ export default function Book({ content, title }: PageProps) {
     }, [pageHeight, pageWidth, padding]);
 
     useEffect(() => {
-        if (noOfPages === 1) toggleFullScreen();
+        //ducktape basically
+        //otherwise it will calculate the number of pages faster than the book can render completely
+        //and set the pageCount way too high on load, resize fixes it tho
+
         setTimeout(calculateThePages, 500);
     }, []);
-
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-    }
 
     const calculateThePages = () => {
         if (bookRef.current) {
             let totalWidth = bookRef.current.scrollWidth;
-            let pageWidth = window.innerWidth;
-            let newPageCount = Math.ceil(totalWidth / pageWidth);
+            console.log(totalWidth);
+            let newPageCount = Math.ceil(totalWidth / (pageWidth * noOfPages));
             setPageCount(newPageCount);
             pageCount = newPageCount;
 
-            let perc = pageCount === 0 ? 1 : currentPage / pageCount;
-            updatePage(newPageCount, perc);
-
-            percentRead = currentPage / newPageCount;
-            setPercentRead(percentRead);
+            updatePage(newPageCount);
         }
     };
+
     function turnPage(event: KeyboardEvent) {
         event.preventDefault();
         bookRef.current?.focus;
@@ -65,28 +60,25 @@ export default function Book({ content, title }: PageProps) {
     }
 
     function changePage(amount: number) {
-        let newValue = currentPage + amount;
-        if (newValue > 0 && newValue <= pageCount && bookRef.current) {
-            setCurrentPage(newValue);
+        let newValue = currentPage + amount - 1;
+        if (newValue >= 0 && newValue <= pageCount && bookRef.current) {
+            setCurrentPage(newValue + 1);
             currentPage += amount;
             bookRef.current.scroll({
-                left: newValue * window.innerWidth,
+                left: newValue * (pageWidth * noOfPages),
                 behavior: "smooth",
             });
         }
     }
 
-    function updatePage(newPageCount: number, perc: number) {
-        let newPage = Math.ceil(newPageCount * perc);
-        console.log(perc);
+    function updatePage(newPageCount: number) {
+        let newPage = Math.floor(newPageCount * percentRead);
         if (bookRef.current) {
-            setCurrentPage(newPage);
+            setCurrentPage(newPage + 1);
             bookRef.current.focus();
-            bookRef.current.scrollLeft = 0;
-            bookRef.current.scrollLeft = newPage * window.innerWidth;
+            bookRef.current.scrollLeft = newPage * pageWidth * noOfPages;
         }
     }
-
     return (
         <div>
             <div
@@ -100,6 +92,10 @@ export default function Book({ content, title }: PageProps) {
                     maxHeight: `${pageHeight}px`, // Ensures the div doesn't grow vertically
                 }}
             ></div>
+            <Navigation
+                changePage={changePage}
+                toggleFullscreen={toggleFullScreen}
+            />
             <PageNumber pages={pageCount} currentPage={currentPage} />
         </div>
     );
@@ -129,4 +125,13 @@ export default function Book({ content, title }: PageProps) {
                 </div>
             </div>
         );
+}
+
+//@ts-ignore
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
 }

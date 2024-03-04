@@ -1,11 +1,17 @@
 import JSZip from "jszip";
 import { ChangeEvent, useState } from "react";
 
+type BlobImages = {
+    [key: string]: string;
+};
+
 export default function useEpub() {
     let [rawContent, setRawContent] = useState("");
     let [isLoading, setIsLoading] = useState(false);
+    let [title, setTitle] = useState("");
     let style = "";
     let obfFolder = "";
+    let images: BlobImages = {};
     let zip: JSZip | null = null;
 
     const validTypes = [
@@ -53,14 +59,31 @@ export default function useEpub() {
                 if (obfLocation) {
                     obfFolder = getContainingFolder(obfLocation);
                     let obfFile = (zip as JSZip).file(obfLocation);
-                    let obf = await obfFile?.async("text");
-                    parseManifest(obf as string);
+                    let opf = await obfFile?.async("text");
+                    try {
+                        let parser = new DOMParser();
+                        let parsedOpf = parser.parseFromString(
+                            opf as string,
+                            "text/xml"
+                        );
+                        parseManifest(parsedOpf);
+                        getTitle(parsedOpf);
+                    } catch (err) {
+                        console.log("error loading opf file: ", err);
+                    }
                 } else {
                     setRawContent("Error finding opf file");
                 }
             }
         } catch (error) {
             console.error("Error reading EPUB contents:", error);
+        }
+    }
+
+    function getTitle(opf: Document) {
+        let titleElement = opf.querySelector("metadata title");
+        if (titleElement) {
+            setTitle(titleElement.textContent as string);
         }
     }
 
@@ -83,11 +106,7 @@ export default function useEpub() {
         return "";
     }
 
-    let images: any = {};
-
-    async function parseManifest(file: string) {
-        let parser = new DOMParser();
-        let opf = parser.parseFromString(file, "text/xml");
+    async function parseManifest(opf: Document) {
         const items = opf.querySelectorAll("manifest item"); // Correctly target <item> elements within <manifest>
         let contents = "";
 
@@ -110,15 +129,23 @@ export default function useEpub() {
                         );
                         let evenMoreCleanItemContents =
                             formatChapters(cleanItemContents);
-                        contents += evenMoreCleanItemContents; // Accumulate contents
+                        let finalVersionISwear = removeInlineStyles(
+                            evenMoreCleanItemContents
+                        );
+                        contents += finalVersionISwear; // Accumulate contents
                     }
                 }
             }
         }
         // toggleFullScreen();
         addStyling();
-        setRawContent(contents); // Update state once with all contents
-        setIsLoading(false); // Move setIsLoading(false) here
+        setRawContent(contents);
+        setIsLoading(false);
+    }
+
+    function removeInlineStyles(chapter: string): string {
+        const regex = /<style[^>]*>.*?<\/style>/gs;
+        return chapter.replace(regex, "");
     }
 
     function formatChapters(content: string): string {
@@ -162,14 +189,9 @@ export default function useEpub() {
                 let url = URL.createObjectURL(blob);
                 //@ts-ignore
                 images[src] = url;
-                img.setAttribute("src", images[src]);
             }
         }
         img.setAttribute("src", images[src]);
-        img.setAttribute(
-            "style",
-            "max-height: calc(100svh - 2*var(--book-padding)) !important;"
-        );
     }
 
     async function formatXMLImage(image: Element) {
@@ -205,5 +227,5 @@ export default function useEpub() {
         document.head.appendChild(link);
     }
 
-    return [rawContent, isLoading, handleFileInput];
+    return { title, rawContent, isLoading, handleFileInput };
 }

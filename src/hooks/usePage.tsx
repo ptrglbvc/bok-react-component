@@ -2,24 +2,25 @@
 import { useState, useEffect } from "react";
 
 export default function usePage() {
-    let [height, setHeight] = useState(window.innerHeight);
+    const getBodyRect = () => document.body.getBoundingClientRect();
+    let [height, setHeight] = useState(getBodyRect().height);
     let [width, setWidth] = useState(
-        window.innerHeight < window.innerWidth
-            ? Math.floor(window.innerWidth / 2)
-            : window.innerWidth
+        getBodyRect().height < getBodyRect().width
+            ? getBodyRect().width / 2
+            : getBodyRect().width
     );
     let [noOfPages, setNoOfPages] = useState(
-        window.innerHeight < window.innerWidth ? 2 : 1
+        getBodyRect().height < getBodyRect().width ? 2 : 1
     );
 
     const updatePageDimensions = () => {
-        if (window.innerHeight < window.innerWidth) {
-            setHeight(window.innerHeight);
-            setWidth(Math.floor(window.innerWidth / 2));
+        if (getBodyRect().height < getBodyRect().width) {
+            setHeight(getBodyRect().height);
+            setWidth(getBodyRect().width / 2);
             setNoOfPages(2);
         } else {
-            setHeight(window.innerHeight);
-            setWidth(window.innerWidth);
+            setHeight(getBodyRect().height);
+            setWidth(getBodyRect().width);
             setNoOfPages(1);
         }
     };
