@@ -1,4 +1,5 @@
 import { PropagateLoader } from "react-spinners";
+import styles from "./InputScreen.module.css";
 
 interface InputScreenProps {
     isLoading: boolean;
@@ -10,7 +11,7 @@ export default function InputScreen({
     handleFileInput,
 }: InputScreenProps) {
     return (
-        <div className="input">
+        <div className={styles.input}>
             <h1>Bok</h1>
             <input
                 type="file"

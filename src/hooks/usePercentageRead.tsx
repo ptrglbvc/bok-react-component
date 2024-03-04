@@ -2,6 +2,7 @@ import { RefObject, useEffect, useState } from "react";
 
 export default function usePercentageRead(bookRef: RefObject<HTMLDivElement>) {
     let [percentRead, setPercentRead] = useState(0);
+
     useEffect(() => {
         const calculateThePercentage = () => {
             if (bookRef.current) {
@@ -20,5 +21,5 @@ export default function usePercentageRead(bookRef: RefObject<HTMLDivElement>) {
             );
         };
     });
-    return percentRead;
+    return { percentRead, setPercentRead };
 }

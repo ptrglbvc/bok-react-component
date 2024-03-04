@@ -101,7 +101,7 @@ body {
     padding-right: auto;
     margin-bottom: 50px;
     border-radius: 20px;
-    max-height: calc(100svh - 2 * var(--x-padding)) !important;
+    max-height: calc(100svh - var(--y-padding)) !important;
 }
 
 .page {

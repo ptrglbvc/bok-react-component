@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import usePage from "../hooks/usePage.tsx";
 import usePercentageRead from "../hooks/usePercentageRead.tsx";
+import useLocalStorage from "../hooks/useLocalStorage.tsx";
 
 import PageNumber from "./PageNumber.tsx";
 import Navigation from "./Navigation.tsx";
@@ -14,14 +15,14 @@ export default function Book({ content, title }: PageProps) {
     //@ts-ignore
     let [isPaged, setIsPaged] = useState(true);
     //@ts-ignore
-    let [padding, setPadding] = useState(50);
-    //@ts-ignore
+    let [padding, setPadding] = useState(40);
     let [pageWidth, pageHeight, noOfPages] = usePage();
     let bookRef = useRef<HTMLDivElement>(null);
-    let percentRead = usePercentageRead(bookRef);
+    let { percentRead, setPercentRead } = usePercentageRead(bookRef);
 
     let [currentPage, setCurrentPage] = useState(1);
     let [pageCount, setPageCount] = useState(0);
+    useLocalStorage(title, percentRead);
 
     useEffect(() => {
         calculateThePages();
@@ -33,12 +34,24 @@ export default function Book({ content, title }: PageProps) {
     }, [pageHeight, pageWidth, padding]);
 
     useEffect(() => {
+        resumeReading();
         //ducktape basically
         //otherwise it will calculate the number of pages faster than the book can render completely
         //and set the pageCount way too high on load, resize fixes it tho
-
         setTimeout(calculateThePages, 500);
     }, []);
+
+    function resumeReading() {
+        let local = localStorage.getItem(title);
+        if (local) {
+            let parsedLocal = JSON.parse(local);
+            if (parsedLocal) {
+                console.log(parsedLocal);
+                setPercentRead(parsedLocal.percentRead);
+                percentRead = parsedLocal.percentRead;
+            }
+        }
+    }
 
     const calculateThePages = () => {
         if (bookRef.current) {
@@ -72,9 +85,10 @@ export default function Book({ content, title }: PageProps) {
     }
 
     function updatePage(newPageCount: number) {
-        let newPage = Math.floor(newPageCount * percentRead);
+        let newPage = Math.round(newPageCount * percentRead);
         if (bookRef.current) {
             setCurrentPage(newPage + 1);
+            currentPage = newPage + 1;
             bookRef.current.focus();
             bookRef.current.scrollLeft = newPage * pageWidth * noOfPages;
         }
