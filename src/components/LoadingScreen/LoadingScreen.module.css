@@ -1,0 +1,12 @@
+.loading-screen {
+    height: 100svh;
+    width: 100svw;
+    position: absolute;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-bar {
+}

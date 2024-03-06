@@ -1,0 +1,7 @@
+.prev-page,
+.next-page {
+    position: absolute;
+    border: 1px solid red;
+    width: 100svw;
+    height: 100svh;
+}
