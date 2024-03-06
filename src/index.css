@@ -11,7 +11,7 @@
     background-color: black;
     height: 100svh;
     width: 100svw;
-    /* overflow: clip; */
+    overflow: clip;
     overflow: hidden;
     scrollbar-width: none;
 
@@ -27,7 +27,14 @@
 body {
     height: 100svh;
     width: 100svw;
-    margin: 0;
+    margin: 0 !important;
+}
+
+/* happens sometimes, with some characters like © */
+parsererror {
+    position: absolute;
+    height: 0;
+    opacity: 0;
 }
 
 .root {
@@ -101,13 +108,16 @@ body {
     }
 }
 
-.book-page img {
-    padding-left: auto;
-    padding-right: auto;
-    margin-bottom: 50px;
+.book-page img,
+svg {
     border-radius: 20px;
     max-width: calc(100svw - 2 * var(--x-padding)) !important;
     max-height: calc(100svh - var(--y-padding)) !important;
+}
+
+svg > image {
+    width: inherit;
+    height: inherit;
 }
 
 .page {

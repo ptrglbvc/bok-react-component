@@ -115,6 +115,8 @@ export default function useEpub() {
             let itemType = item.getAttribute("media-type") as string;
             let itemFile = (zip as JSZip).file(obfFolder + itemLocation); // Use the variable correctly
             if (itemType.includes("image")) {
+            } else if (itemType.includes("adobe-page-template")) {
+            } else if (itemLocation.includes(".ncx")) {
             } else if (itemType.includes("css")) {
                 if (itemFile) {
                     style += await itemFile.async("text");
