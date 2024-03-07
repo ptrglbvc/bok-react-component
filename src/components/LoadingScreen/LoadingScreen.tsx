@@ -10,7 +10,7 @@ export default function LoadingScreen({ isLoading }: { isLoading: boolean }) {
                     : styles["loading-screen-gon"]
             }
         >
-            <div className={styles["loading-bar"]}>
+            <div>
                 <PropagateLoader color="red"></PropagateLoader>
             </div>
         </div>

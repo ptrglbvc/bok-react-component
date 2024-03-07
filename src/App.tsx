@@ -5,7 +5,8 @@ import Book from "./components/Book.tsx";
 import LoadingScreen from "./components/LoadingScreen/LoadingScreen.tsx";
 
 function App() {
-    let { title, rawContent, isLoading, handleFileInput } = useEpub();
+    let { title, rawContent, isLoading, setIsLoading, handleFileInput } =
+        useEpub();
 
     return (
         <>
@@ -13,7 +14,11 @@ function App() {
             {!rawContent ? (
                 <InputScreen handleFileInput={handleFileInput} />
             ) : (
-                <Book content={rawContent as string} title={title} />
+                <Book
+                    content={rawContent as string}
+                    title={title}
+                    setIsLoading={setIsLoading}
+                />
             )}
         </>
     );

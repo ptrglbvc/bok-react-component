@@ -142,7 +142,6 @@ export default function useEpub() {
         // toggleFullScreen();
         addStyling();
         setRawContent(contents);
-        setIsLoading(false);
     }
 
     function removeInlineStyles(chapter: string): string {
@@ -229,5 +228,5 @@ export default function useEpub() {
         document.head.appendChild(link);
     }
 
-    return { title, rawContent, isLoading, handleFileInput };
+    return { title, rawContent, isLoading, setIsLoading, handleFileInput };
 }

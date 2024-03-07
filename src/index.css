@@ -89,9 +89,14 @@ parsererror {
         column-count: 2;
         -moz-column-count: 2;
         -webkit-column-count: 2;
+
+        column-width: calc(50svw - 2 * var(--x-padding));
+        -webkit-column-width: calc(50svw - 2 * var(--x-padding));
     }
-    .book-page img {
-        max-width: calc(100svw - 2 * var(--x-padding)) !important;
+
+    .book-page img,
+    svg {
+        max-width: calc(50svw - 2 * var(--x-padding)) !important;
     }
 }
 
@@ -106,12 +111,16 @@ parsererror {
         column-width: calc(100svw - 2 * var(--x-padding));
         -webkit-column-width: calc(100svw - 2 * var(--x-padding));
     }
+
+    .book-page img,
+    svg {
+        max-width: calc(100svw - 2 * var(--x-padding)) !important;
+    }
 }
 
 .book-page img,
 svg {
     border-radius: 20px;
-    max-width: calc(100svw - 2 * var(--x-padding)) !important;
     max-height: calc(100svh - var(--y-padding)) !important;
 }
 
