@@ -9,7 +9,7 @@ function App() {
 
     return (
         <>
-            {isLoading ? <LoadingScreen></LoadingScreen> : <></>}
+            <LoadingScreen isLoading={isLoading}></LoadingScreen>
             {!rawContent ? (
                 <InputScreen handleFileInput={handleFileInput} />
             ) : (
