@@ -73,24 +73,27 @@ export default function Book({ content, title }: PageProps) {
     }
 
     function changePage(amount: number) {
-        let newValue = currentPage + amount - 1;
-        if (newValue >= 0 && newValue <= pageCount && bookRef.current) {
-            setCurrentPage(newValue + 1);
-            currentPage += amount;
-            bookRef.current.scroll({
-                left: newValue * (pageWidth * noOfPages),
-                behavior: "smooth",
-            });
-        }
+        setCurrentPage((prev) => {
+            let newValue = prev + amount;
+            if (newValue >= 0 && newValue <= pageCount && bookRef.current) {
+                bookRef.current.scroll({
+                    left: (newValue - 1) * (pageWidth * noOfPages),
+                    behavior: "smooth",
+                });
+                return newValue;
+            }
+            return prev;
+        });
     }
 
     function updatePage(newPageCount: number) {
         let newPage = Math.round(newPageCount * percentRead);
+        // changePage(currentPage - newPage);
         if (bookRef.current) {
-            setCurrentPage(newPage + 1);
-            currentPage = newPage + 1;
+            setCurrentPage(newPage);
+            // currentPage = newPage;
             bookRef.current.focus();
-            bookRef.current.scrollLeft = newPage * pageWidth * noOfPages;
+            bookRef.current.scrollLeft = (newPage - 1) * pageWidth * noOfPages;
         }
     }
     return (
