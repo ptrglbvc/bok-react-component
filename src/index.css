@@ -20,8 +20,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    --x-padding: 30px;
-    --y-padding: 100px;
+    --side-margin: 30px;
+    --top-margin: 30px;
+    --bottom-margin: 70px;
+
+    --font-size: 1em;
 }
 
 body {
@@ -69,59 +72,60 @@ parsererror {
 
 .book-page {
     margin: 0;
-    /* top: 0px; */
-    padding: calc(var(--y-padding) * 0.3) var(--x-padding)
-        calc(var(--y-padding) * 0.7);
-    height: calc(100svh - var(--y-padding));
+    padding: var(--top-margin) var(--side-margin) var(--bottom-margin);
+    height: calc(100svh - calc(var(--top-margin) + var(--bottom-margin)));
     text-shadow: 2px 2px 5px rgba(0, 0, 0);
+    font-size: var(--font-size);
 
-    column-gap: calc(2 * var(--x-padding));
+    column-gap: calc(2 * var(--side-margin));
     column-fill: balance;
     position: relative;
     overflow: hidden hidden;
-    -moz-column-gap: calc(2 * var(--x-padding));
-    -webkit-column-gap: calc(2 * var(--x-padding));
+    -moz-column-gap: calc(2 * var(--side-margin));
+    -webkit-column-gap: calc(2 * var(--side-margin));
 }
 
 @media screen and (orientation: landscape) {
     .book-page {
-        width: calc(100svw - 2 * var(--x-padding));
+        width: calc(100svw - 2 * var(--side-margin));
         column-count: 2;
         -moz-column-count: 2;
         -webkit-column-count: 2;
 
-        column-width: calc(50svw - 2 * var(--x-padding));
-        -webkit-column-width: calc(50svw - 2 * var(--x-padding));
+        column-width: calc(50svw - 2 * var(--side-margin));
+        -webkit-column-width: calc(50svw - 2 * var(--side-margin));
     }
 
     .book-page img,
     svg {
-        max-width: calc(50svw - 2 * var(--x-padding)) !important;
+        max-width: calc(50svw - 2 * var(--side-margin)) !important;
     }
 }
 
 @media screen and (orientation: portrait) {
     .book-page {
-        width: calc(100svw - 2 * var(--x-padding));
+        width: calc(100svw - 2 * var(--side-margin));
         column-count: 1;
         -moz-column-count: 1;
         -webkit-column-count: 1;
 
         /* without this safari does not play nice, creating only one column, period */
-        column-width: calc(100svw - 2 * var(--x-padding));
-        -webkit-column-width: calc(100svw - 2 * var(--x-padding));
+        column-width: calc(100svw - 2 * var(--side-margin));
+        -webkit-column-width: calc(100svw - 2 * var(--side-margin));
     }
 
     .book-page img,
     svg {
-        max-width: calc(100svw - 2 * var(--x-padding)) !important;
+        max-width: calc(100svw - 2 * var(--side-margin)) !important;
     }
 }
 
 .book-page img,
 svg {
     border-radius: 20px;
-    max-height: calc(100svh - var(--y-padding)) !important;
+    max-height: calc(
+        100svh - (var(--top-margin) + var(--bottom-margin))
+    ) !important;
 }
 
 svg > image {
