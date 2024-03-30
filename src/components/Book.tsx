@@ -4,7 +4,7 @@ import usePercentageRead from "../hooks/usePercentageRead.tsx";
 import useLocalStorage from "../hooks/useLocalStorage.tsx";
 
 import PageNumber from "./PageNumber.tsx";
-import Navigation from "./Navigation.tsx";
+import useNavigation from "../hooks/useNavigation.ts";
 
 interface PageProps {
     content: string;
@@ -24,8 +24,19 @@ export default function Book({ content, title, setIsLoading }: PageProps) {
     let [currentPage, setCurrentPage] = useState(1);
     let [pageCount, setPageCount] = useState(0);
     useLocalStorage(title, percentRead);
+    useNavigation(changePage);
 
     useEffect(() => {
+        const resumeReading = () => {
+            let local = localStorage.getItem(title);
+            if (local) {
+                let parsedLocal = JSON.parse(local);
+                if (parsedLocal) {
+                    setPercentRead(parsedLocal.percentRead);
+                    percentRead = parsedLocal.percentRead;
+                }
+            }
+        };
         resumeReading();
     }, []);
 
@@ -46,17 +57,6 @@ export default function Book({ content, title, setIsLoading }: PageProps) {
             }, 600);
         };
     }, [pageHeight, pageWidth, padding]);
-
-    function resumeReading() {
-        let local = localStorage.getItem(title);
-        if (local) {
-            let parsedLocal = JSON.parse(local);
-            if (parsedLocal) {
-                setPercentRead(parsedLocal.percentRead);
-                percentRead = parsedLocal.percentRead;
-            }
-        }
-    }
 
     const calculateThePages = () => {
         if (bookRef.current) {
@@ -104,6 +104,7 @@ export default function Book({ content, title, setIsLoading }: PageProps) {
             }, 400);
         }
     }
+
     return (
         <div>
             <div
@@ -117,10 +118,10 @@ export default function Book({ content, title, setIsLoading }: PageProps) {
                     maxHeight: `${pageHeight}px`, // Ensures the div doesn't grow vertically
                 }}
             ></div>
-            <Navigation
+            {/* <Navigation
                 changePage={changePage}
                 toggleFullscreen={toggleFullScreen}
-            />
+            /> */}
             <PageNumber pages={pageCount} currentPage={currentPage} />
         </div>
     );
