@@ -10,8 +10,10 @@ interface PageProps {
   content: string;
   title: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  fontSize: React.MutableRefObject<number>;
-  padding: React.MutableRefObject<number>;
+  fontSize: number;
+  sidePadding: number;
+  setFontSize: React.Dispatch<React.SetStateAction<number>>;
+  setPadding: React.Dispatch<React.SetStateAction<number>>;
   isOptionMenuVisible: boolean;
 }
 
@@ -20,8 +22,10 @@ export default function Book({
   title,
   setIsLoading,
   fontSize,
-  padding,
+  sidePadding,
   isOptionMenuVisible,
+  setFontSize,
+  setPadding,
 }: PageProps) {
   let [isPaged, setIsPaged] = useState(true);
   const [pageWidth, pageHeight, noOfPages] = usePage();
@@ -30,7 +34,7 @@ export default function Book({
 
   let [currentPage, setCurrentPage] = useState(1);
   let [pageCount, setPageCount] = useState(0);
-  useLocalStorage(title, percentRead, padding, fontSize);
+  useLocalStorage(title, percentRead, sidePadding, fontSize);
   useNavigation(changePage, isOptionMenuVisible);
 
   useEffect(() => {
@@ -42,10 +46,10 @@ export default function Book({
           setPercentRead(parsedLocal.percentRead);
           percentRead = parsedLocal.percentRead;
           if (parsedLocal.fontSize) {
-            fontSize.current = parsedLocal.fontSize;
+            fontSize = parsedLocal.fontSize;
           }
           if (parsedLocal.padding) {
-            padding.current = parsedLocal.padding;
+            sidePadding = parsedLocal.padding;
           }
         }
       }
@@ -57,7 +61,11 @@ export default function Book({
     setIsLoading(true);
     bookRef.current?.style.setProperty(
       "--side-padding",
-      padding.current.toString() + "px",
+      sidePadding.toString() + "px",
+    );
+    bookRef.current?.style.setProperty(
+      "--font-size",
+      fontSize.toString() + "em",
     );
     //ducktape basically
     //otherwise it will calculate the number of pages faster than the book can render completely
@@ -73,7 +81,7 @@ export default function Book({
         document.removeEventListener("keydown", turnPage);
       }, 600);
     };
-  }, [pageHeight, pageWidth, padding.current]);
+  }, [pageHeight, pageWidth, sidePadding, fontSize]);
 
   const calculateThePages = () => {
     if (bookRef.current) {
@@ -124,6 +132,10 @@ export default function Book({
 
   return (
     <div>
+      {/* <div style={{ position: "absolute", opacity: "0" }}>
+        {padding}
+        {fontSize}
+      </div> */}
       <div
         ref={bookRef}
         dangerouslySetInnerHTML={{ __html: content }}
@@ -131,14 +143,9 @@ export default function Book({
         style={{
           overflowY: "hidden",
           overflowX: "hidden",
-          // display: "inline-block",
           maxHeight: `${pageHeight}px`, // Ensures the div doesn't grow vertically
         }}
       ></div>
-      {/* <Navigation
-                changePage={changePage}
-                toggleFullscreen={toggleFullScreen}
-            /> */}
       <PageNumber pages={pageCount} currentPage={currentPage} />
     </div>
   );
@@ -148,9 +155,9 @@ export default function Book({
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div
           style={{
-            padding: padding.current,
-            width: pageWidth - 2 * padding.current,
-            height: pageHeight - 2 * padding.current,
+            padding: sidePadding,
+            width: pageWidth - 2 * sidePadding,
+            height: pageHeight - 2 * sidePadding,
           }}
           className="book-page"
         >
@@ -158,9 +165,9 @@ export default function Book({
         </div>
         <div
           style={{
-            padding: padding.current,
-            width: pageWidth - 2 * padding.current,
-            height: pageHeight - 2 * padding.current,
+            padding: sidePadding,
+            width: pageWidth - 2 * sidePadding,
+            height: pageHeight - 2 * sidePadding,
           }}
           className="book-page"
         >
@@ -168,12 +175,4 @@ export default function Book({
         </div>
       </div>
     );
-}
-
-function toggleFullScreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else if (document.exitFullscreen) {
-    document.exitFullscreen();
-  }
 }

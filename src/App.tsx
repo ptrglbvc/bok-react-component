@@ -7,11 +7,17 @@ import LoadingScreen from "./components/LoadingScreen/LoadingScreen.tsx";
 import OptionsMenu from "./components/OptionsMenu/OptionsMenu.tsx";
 
 function App() {
-  const { title, rawContent, isLoading, setIsLoading, handleFileInput } =
-    useEpub();
+  const {
+    title,
+    rawContent,
+    setRawContent,
+    isLoading,
+    setIsLoading,
+    handleFileInput,
+  } = useEpub();
   const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
-  const fontSize = useRef(1);
-  const padding = useRef(30);
+  const [fontSize, setFontSize] = useState(1.2);
+  const [sidePadding, setSidePadding] = useState(30);
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,14 +37,19 @@ function App() {
             title={title}
             setIsLoading={setIsLoading}
             fontSize={fontSize}
-            padding={padding}
+            sidePadding={sidePadding}
+            setPadding={setSidePadding}
+            setFontSize={setFontSize}
             isOptionMenuVisible={isOptionsMenuVisible}
           />
           {isOptionsMenuVisible && (
             <OptionsMenu
               onClose={() => setIsOptionsMenuVisible(false)}
               fontSize={fontSize}
-              padding={padding}
+              padding={sidePadding}
+              setPadding={setSidePadding}
+              setFontSize={setFontSize}
+              exitBook={() => setRawContent("")}
             />
           )}
           {!isOptionsMenuVisible && (

@@ -3,8 +3,8 @@ import { useEffect } from "react";
 export default function useLocalStorage(
   title: string,
   percentRead: number,
-  padding: React.MutableRefObject<number>,
-  fontSize: React.MutableRefObject<number>,
+  padding: number,
+  fontSize: number,
 ) {
   let json = "";
   useEffect(() => {
@@ -19,11 +19,11 @@ export default function useLocalStorage(
       // what am I doing
       json = JSON.stringify({
         percentRead: percentRead,
-        padding: padding.current,
-        fontSize: fontSize.current,
+        padding: padding,
+        fontSize: fontSize,
       });
       /* eslint-enable */
       localStorage.setItem(title, json);
     }
-  }, [title, percentRead, padding.current, fontSize.current]);
+  }, [title, percentRead, padding, fontSize]);
 }

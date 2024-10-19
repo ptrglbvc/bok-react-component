@@ -20,7 +20,7 @@
     bottom: 0;
     width: 100%;
     background: #1e1e1e;
-    padding: 20px;
+    padding: 30px;
     box-sizing: border-box;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -50,7 +50,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 60px;
+    margin-top: 45px;
 }
 
 .options-buttons button {
@@ -65,4 +65,36 @@
 
 .options-buttons button:hover {
     background-color: #444;
+}
+
+.padding-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+    align-items: center;
+}
+
+.font-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+    align-items: center;
+}
+
+.option-label {
+    color: #bbbbbb;
+}
+
+.option-value {
+    font-weight: bold;
+    transition:
+        transform 0.3s ease-out,
+        opacity 0.3s ease-out;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.option-value.animate {
+    opacity: 0.5;
+    transform: scale(1.2) rotate(0.02turn); /* Slightly enlarged and rotated for emphasis */
 }
