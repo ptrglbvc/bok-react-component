@@ -1,0 +1,68 @@
+.options-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+}
+
+.options-menu-overlay.fade-out {
+    opacity: 0;
+}
+
+.options-menu {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #1e1e1e;
+    padding: 20px;
+    box-sizing: border-box;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    color: #fff;
+    max-height: 50%;
+    overflow-y: auto;
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+}
+
+.options-menu.slide-down {
+    transform: translateY(100%);
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.options-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 60px;
+}
+
+.options-buttons button {
+    padding: 15px;
+    font-size: 18px;
+    background-color: #333;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.options-buttons button:hover {
+    background-color: #444;
+}
