@@ -2,12 +2,12 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     /* line-gap-override: 10; */
-    font-weight: 400;
+    font-weight: 500;
     text-align: justify;
     transform: scale(--font-size)
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.8);
+    color-scheme: dark light ;
+    color: rgb(215, 215, 215);
     background-color: black;
     height: 100svh;
     width: 100svw;

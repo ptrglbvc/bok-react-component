@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import "./OptionsMenu.css";
 import toggleFullscreen from "../../helpful_functions/toggleFullscreen";
+
+import "./OptionsMenu.css";
 
 interface OptionsMenuProps {
   onClose: () => void;

@@ -19,6 +19,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
+    max-width: 500px;
     background: #1e1e1e;
     padding: 30px;
     box-sizing: border-box;
@@ -27,8 +28,18 @@
     color: #fff;
     max-height: 50%;
     overflow-y: auto;
-    transform: translateY(0);
+    /* transform: translateY(0); */
     transition: transform 0.3s ease-out;
+}
+
+@media only screen and (min-width: 500px) {
+    .options-menu {
+        left: calc(50% - 250px);
+        /* transform: translateX(-50%); */
+    }
+    .options-menu.slide-down {
+        transform: translateY(100%);
+    }
 }
 
 .options-menu.slide-down {

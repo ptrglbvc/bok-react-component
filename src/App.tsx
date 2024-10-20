@@ -15,6 +15,7 @@ function App() {
     setIsLoading,
     handleFileInput,
   } = useEpub();
+  if (title) document.title = title;
   const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
   const [fontSize, setFontSize] = useState(1.2);
   const [sidePadding, setSidePadding] = useState(30);
