@@ -11,9 +11,11 @@ interface PageProps {
   title: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   fontSize: number;
+  fontFamily: string;
   sidePadding: number;
   setFontSize: React.Dispatch<React.SetStateAction<number>>;
   setPadding: React.Dispatch<React.SetStateAction<number>>;
+  setFontFamily: React.Dispatch<React.SetStateAction<string>>;
   isOptionMenuVisible: boolean;
 }
 
@@ -23,9 +25,11 @@ export default function Book({
   setIsLoading,
   fontSize,
   sidePadding,
+  fontFamily,
   isOptionMenuVisible,
   setFontSize,
   setPadding,
+  setFontFamily,
 }: PageProps) {
   let [isPaged, setIsPaged] = useState(true);
   const [pageWidth, pageHeight, noOfPages] = usePage();
@@ -34,7 +38,7 @@ export default function Book({
 
   let [currentPage, setCurrentPage] = useState(1);
   let [pageCount, setPageCount] = useState(0);
-  useLocalStorage(title, percentRead, sidePadding, fontSize);
+  useLocalStorage(title, percentRead, sidePadding, fontSize, fontFamily);
   useNavigation(changePage, isOptionMenuVisible);
 
   useEffect(() => {
@@ -50,6 +54,9 @@ export default function Book({
           }
           if (parsedLocal.padding) {
             sidePadding = parsedLocal.padding;
+          }
+          if (parsedLocal.fontFamily) {
+            setFontFamily(parsedLocal.fontFamily);
           }
         }
       }
@@ -67,6 +74,8 @@ export default function Book({
       "--font-size",
       fontSize.toString() + "em",
     );
+    console.log(fontFamily);
+    bookRef.current?.style.setProperty("--font-family", fontFamily);
     //ducktape basically
     //otherwise it will calculate the number of pages faster than the book can render completely
     //and set the pageCount way too high on load, resize fixes it tho
@@ -81,7 +90,7 @@ export default function Book({
         document.removeEventListener("keydown", turnPage);
       }, 600);
     };
-  }, [pageHeight, pageWidth, sidePadding, fontSize]);
+  }, [pageHeight, pageWidth, sidePadding, fontSize, fontFamily]);
 
   const calculateThePages = () => {
     if (bookRef.current) {
@@ -95,7 +104,6 @@ export default function Book({
 
   function turnPage(event: KeyboardEvent) {
     event.preventDefault();
-    console.log(currentPage);
     bookRef.current?.focus;
     if (event.key === "ArrowLeft") changePage(-1);
     if (event.key === "ArrowRight") changePage(1);

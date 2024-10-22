@@ -7,8 +7,10 @@ interface OptionsMenuProps {
   onClose: () => void;
   fontSize: number;
   padding: number;
+  fontFamily: string;
   setFontSize: React.Dispatch<React.SetStateAction<number>>;
   setPadding: React.Dispatch<React.SetStateAction<number>>;
+  setFontFamily: React.Dispatch<React.SetStateAction<string>>;
   exitBook: () => void;
 }
 
@@ -16,8 +18,10 @@ function OptionsMenu({
   onClose,
   fontSize,
   padding,
+  fontFamily,
   setFontSize,
   setPadding,
+  setFontFamily,
   //not yet implemented. trouble with closing reseting all the state
   //I want to retry this as soon as I clean up the state management
   exitBook,
@@ -26,6 +30,8 @@ function OptionsMenu({
 
   const fontValueRef = useRef<HTMLSpanElement>(null);
   const paddingValueRef = useRef<HTMLSpanElement>(null);
+
+  let supportedFonts = ["Inter", "Roboto", "Merriweather"];
 
   const handleClose = () => {
     setIsClosing(true);
@@ -101,6 +107,25 @@ function OptionsMenu({
         </button>
         <h2>Reader Options</h2>
         <div className="options-buttons">
+          <div className="font-family-buttons">
+            <select
+              value={fontFamily}
+              onChange={(e) => {
+                if (supportedFonts.includes(e.target.value)) {
+                  setFontFamily(e.target.value);
+                }
+              }}
+            >
+              {supportedFonts.map((font) => {
+                return (
+                  <option key={font} value={font}>
+                    {font}
+                  </option>
+                );
+              })}
+            </select>
+            <div className="option-label">Font family</div>s
+          </div>
           <div className="padding-buttons">
             <button onClick={handlePaddingIncrement}>+</button>
             <button onClick={handlePaddingDecrement}>-</button>

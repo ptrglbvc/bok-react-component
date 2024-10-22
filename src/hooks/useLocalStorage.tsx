@@ -5,6 +5,7 @@ export default function useLocalStorage(
   percentRead: number,
   padding: number,
   fontSize: number,
+  fontFamily: string,
 ) {
   let json = "";
   useEffect(() => {
@@ -21,9 +22,10 @@ export default function useLocalStorage(
         percentRead: percentRead,
         padding: padding,
         fontSize: fontSize,
+        fontFamily: fontFamily,
       });
       /* eslint-enable */
       localStorage.setItem(title, json);
     }
-  }, [title, percentRead, padding, fontSize]);
+  }, [title, percentRead, padding, fontSize, fontFamily]);
 }

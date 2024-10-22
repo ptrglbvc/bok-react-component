@@ -15,8 +15,6 @@ const useNavigation = (
       if (newSelectedText && newSelectedText.length > 0) {
         selectedText.current = newSelectedText;
       } else selectedText.current = "";
-
-      console.log(selectedText.current);
     };
     document.addEventListener("selectionchange", handleSelection);
     return () => {
@@ -51,9 +49,7 @@ const useNavigation = (
 
   useEffect(() => {
     const handleTouchStart = () => {
-      longPressTimerRef.current = setTimeout(() => {
-        console.log("Long press detected");
-      }, 200);
+      longPressTimerRef.current = setTimeout(() => {}, 200);
     };
 
     const handleTouchEnd = (event: MouseEvent) => {

@@ -65,13 +65,14 @@
 }
 
 .options-buttons button {
-    padding: 15px;
+    padding: auto;
     font-size: 18px;
     background-color: #333;
     border: none;
     border-radius: 10px;
     color: #fff;
     cursor: pointer;
+    height: 40px;
 }
 
 .options-buttons button:hover {
@@ -83,6 +84,36 @@
     flex-direction: row-reverse;
     gap: 15px;
     align-items: center;
+}
+
+.padding-buttons button {
+    width: 40px;
+}
+
+.font-buttons button {
+    width: 40px;
+}
+
+.font-family-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+    align-items: center;
+}
+
+.font-family-buttons select {
+    height: 40px;
+    border-radius: 10px;
+    background-color: #333;
+    border-color: transparent;
+    color: inherit;
+    padding-right: 10px;
+    padding-left: 10px;
+    outline: none;
+}
+
+.font-family-buttons select :hover {
+    background-color: #444;
 }
 
 .font-buttons {

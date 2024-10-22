@@ -1,12 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+
 :root {
+    --side-padding: 30px;
+    --top-padding: 30px;
+    --bottom-padding: 70px;
+    --font-family: Inter;
+
+    --font-size: 1.2;
+
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     /* line-gap-override: 10; */
-    font-weight: 500;
+    font-weight: 400;
     text-align: justify;
-    transform: scale(--font-size)
+    transform: scale(--font-size);
 
-    color-scheme: dark light ;
+    color-scheme: dark light;
     color: rgb(215, 215, 215);
     background-color: black;
     height: 100svh;
@@ -19,12 +29,6 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    --side-padding: 30px;
-    --top-padding: 30px;
-    --bottom-padding: 70px;
-
-    --font-size: 1.2;
 }
 
 body {
@@ -49,29 +53,9 @@ parsererror {
     position: absolute;
 }
 
-#nav-menu {
-    top: 0;
-    left: 0;
-    width: 100svw;
-    height: 15svh;
-}
-
-#page-turn-left {
-    top: 15svh;
-    left: 0;
-    width: 40svw;
-    height: 80svh;
-}
-
-#page-turn-right {
-    top: 15svh;
-    left: 40svw;
-    width: 60svw;
-    height: 80svh;
-}
-
 .book-page {
     margin: 0;
+    font-family: var(--font-family);
     padding: var(--top-padding) var(--side-padding) var(--bottom-padding);
     height: calc(100svh - calc(var(--top-padding) + var(--bottom-padding)));
     text-shadow: 2px 2px 5px rgba(0, 0, 0);

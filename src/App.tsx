@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import useEpub from "./hooks/useEpub.tsx";
 
 import Book from "./components/Book.tsx";
@@ -19,12 +19,7 @@ function App() {
   const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
   const [fontSize, setFontSize] = useState(1.2);
   const [sidePadding, setSidePadding] = useState(30);
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(isOptionsMenuVisible);
-    }, 1000);
-  });
+  const [fontFamily, setFontFamily] = useState("Inter");
 
   return (
     <>
@@ -39,8 +34,10 @@ function App() {
             setIsLoading={setIsLoading}
             fontSize={fontSize}
             sidePadding={sidePadding}
+            fontFamily={fontFamily}
             setPadding={setSidePadding}
             setFontSize={setFontSize}
+            setFontFamily={setFontFamily}
             isOptionMenuVisible={isOptionsMenuVisible}
           />
           {isOptionsMenuVisible && (
@@ -48,8 +45,10 @@ function App() {
               onClose={() => setIsOptionsMenuVisible(false)}
               fontSize={fontSize}
               padding={sidePadding}
+              fontFamily={fontFamily}
               setPadding={setSidePadding}
               setFontSize={setFontSize}
+              setFontFamily={setFontFamily}
               exitBook={() => setRawContent("")}
             />
           )}

@@ -22,19 +22,17 @@ export default function useEpub() {
     "image/svg+xml",
   ];
 
-  function handleFileInput(event: ChangeEvent<HTMLInputElement>) {
+  function handleFileInput(file: File) {
     setIsLoading(true);
-    let reader = new FileReader();
+    const reader = new FileReader();
 
-    if (event.target.files && event.target.files.length > 0) {
-      reader.readAsArrayBuffer(event.target.files[0]);
-      reader.onload = (loadEvent: ProgressEvent<FileReader>) => {
-        let result = loadEvent.target?.result;
-        if (result instanceof ArrayBuffer) {
-          handleEpub(result);
-        }
-      };
-    }
+    reader.readAsArrayBuffer(file);
+    reader.onload = (loadEvent: ProgressEvent<FileReader>) => {
+      let result = loadEvent.target?.result;
+      if (result instanceof ArrayBuffer) {
+        handleEpub(result);
+      }
+    };
   }
 
   function handleEpub(epub: ArrayBuffer) {
