@@ -50,10 +50,10 @@ export default function Book({
           setPercentRead(parsedLocal.percentRead);
           percentRead = parsedLocal.percentRead;
           if (parsedLocal.fontSize) {
-            fontSize = parsedLocal.fontSize;
+            setFontSize(parsedLocal.fontSize);
           }
           if (parsedLocal.padding) {
-            sidePadding = parsedLocal.padding;
+            setPadding(parsedLocal.padding);
           }
           if (parsedLocal.fontFamily) {
             setFontFamily(parsedLocal.fontFamily);
