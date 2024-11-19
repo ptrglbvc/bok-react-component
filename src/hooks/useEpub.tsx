@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
 type BlobImages = {
   [key: string]: string;

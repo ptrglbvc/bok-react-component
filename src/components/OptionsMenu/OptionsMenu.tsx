@@ -11,7 +11,7 @@ interface OptionsMenuProps {
   setFontSize: React.Dispatch<React.SetStateAction<number>>;
   setPadding: React.Dispatch<React.SetStateAction<number>>;
   setFontFamily: React.Dispatch<React.SetStateAction<string>>;
-  exitBook: () => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function OptionsMenu({
@@ -24,14 +24,14 @@ function OptionsMenu({
   setFontFamily,
   //not yet implemented. trouble with closing reseting all the state
   //I want to retry this as soon as I clean up the state management
-  exitBook,
+  setIsLoading,
 }: OptionsMenuProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   const fontValueRef = useRef<HTMLSpanElement>(null);
   const paddingValueRef = useRef<HTMLSpanElement>(null);
 
-  let supportedFonts = ["Inter", "Roboto", "Merriweather"];
+  const supportedFonts = ["Inter", "Roboto", "Merriweather"];
 
   const handleClose = () => {
     setIsClosing(true);
@@ -69,6 +69,7 @@ function OptionsMenu({
     if (padding <= 70) {
       setPadding((prev) => prev + 5);
       animateValue(paddingValueRef);
+      setIsLoading(true);
     }
   };
 
@@ -76,6 +77,7 @@ function OptionsMenu({
     if (padding - 5 > 0) {
       setPadding((prev) => prev - 5);
       animateValue(paddingValueRef);
+      setIsLoading(true);
     }
   };
 
@@ -83,6 +85,7 @@ function OptionsMenu({
     if (fontSize < 3) {
       setFontSize((prev) => prev + 0.2);
       animateValue(fontValueRef);
+      setIsLoading(true);
     }
   };
 
@@ -90,6 +93,7 @@ function OptionsMenu({
     if (fontSize - 0.2 > 0.6) {
       setFontSize((prev) => prev - 0.2);
       animateValue(fontValueRef);
+      setIsLoading(true);
     }
   };
 
@@ -124,7 +128,7 @@ function OptionsMenu({
                 );
               })}
             </select>
-            <div className="option-label">Font family</div>s
+            <div className="option-label">Font family</div>
           </div>
           <div className="padding-buttons">
             <button onClick={handlePaddingIncrement}>+</button>

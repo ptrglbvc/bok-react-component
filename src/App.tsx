@@ -7,14 +7,8 @@ import LoadingScreen from "./components/LoadingScreen/LoadingScreen.tsx";
 import OptionsMenu from "./components/OptionsMenu/OptionsMenu.tsx";
 
 function App() {
-  const {
-    title,
-    rawContent,
-    setRawContent,
-    isLoading,
-    setIsLoading,
-    handleFileInput,
-  } = useEpub();
+  const { title, rawContent, isLoading, setIsLoading, handleFileInput } =
+    useEpub();
   if (title) document.title = title;
   const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
   const [fontSize, setFontSize] = useState(1.2);
@@ -49,7 +43,7 @@ function App() {
               setPadding={setSidePadding}
               setFontSize={setFontSize}
               setFontFamily={setFontFamily}
-              exitBook={() => setRawContent("")}
+              setIsLoading={setIsLoading}
             />
           )}
           {!isOptionsMenuVisible && (

@@ -31,13 +31,12 @@ export default function Book({
   setPadding,
   setFontFamily,
 }: PageProps) {
-  let [isPaged, setIsPaged] = useState(true);
   const [pageWidth, pageHeight, noOfPages] = usePage();
-  let bookRef = useRef<HTMLDivElement>(null);
-  let { percentRead, setPercentRead } = usePercentageRead(bookRef);
+  const bookRef = useRef<HTMLDivElement>(null);
+  let { percentRead, setPercentRead } = usePercentageRead(bookRef); // eslint-disable-line
 
-  let [currentPage, setCurrentPage] = useState(1);
-  let [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  let [pageCount, setPageCount] = useState(0); // eslint-disable-line
   useLocalStorage(title, percentRead, sidePadding, fontSize, fontFamily);
   useNavigation(changePage, isOptionMenuVisible);
 
@@ -48,7 +47,7 @@ export default function Book({
         const parsedLocal = JSON.parse(local);
         if (parsedLocal) {
           setPercentRead(parsedLocal.percentRead);
-          percentRead = parsedLocal.percentRead;
+          percentRead = parsedLocal.percentRead; // eslint-disable-line
           if (parsedLocal.fontSize) {
             setFontSize(parsedLocal.fontSize);
           }
@@ -80,7 +79,7 @@ export default function Book({
     //otherwise it will calculate the number of pages faster than the book can render completely
     //and set the pageCount way too high on load, resize fixes it tho
     setTimeout(() => {
-      let newPageCount = calculateThePages();
+      const newPageCount = calculateThePages();
       if (newPageCount) updatePage(newPageCount);
       document.addEventListener("keydown", turnPage);
     }, 600);
@@ -90,12 +89,12 @@ export default function Book({
         document.removeEventListener("keydown", turnPage);
       }, 600);
     };
-  }, [pageHeight, pageWidth, sidePadding, fontSize, fontFamily]);
+  }, [pageHeight, pageWidth, sidePadding, fontSize, fontFamily]); // eslint-disable-line
 
   const calculateThePages = () => {
     if (bookRef.current) {
-      let totalWidth = bookRef.current.scrollWidth;
-      let newPageCount = Math.ceil(totalWidth / (pageWidth * noOfPages));
+      const totalWidth = bookRef.current.scrollWidth;
+      const newPageCount = Math.ceil(totalWidth / (pageWidth * noOfPages));
       setPageCount(newPageCount);
       pageCount = newPageCount;
       return newPageCount;
@@ -111,7 +110,7 @@ export default function Book({
 
   function changePage(amount: number) {
     setCurrentPage((prev) => {
-      let newValue = prev + amount;
+      const newValue = prev + amount;
       if (newValue > 0 && newValue <= pageCount && bookRef.current) {
         bookRef.current.scroll({
           left: (newValue - 1) * (pageWidth * noOfPages),
@@ -157,30 +156,4 @@ export default function Book({
       <PageNumber pages={pageCount} currentPage={currentPage} />
     </div>
   );
-
-  if (!isPaged)
-    return (
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div
-          style={{
-            padding: sidePadding,
-            width: pageWidth - 2 * sidePadding,
-            height: pageHeight - 2 * sidePadding,
-          }}
-          className="book-page"
-        >
-          <div dangerouslySetInnerHTML={{ __html: content }} />
-        </div>
-        <div
-          style={{
-            padding: sidePadding,
-            width: pageWidth - 2 * sidePadding,
-            height: pageHeight - 2 * sidePadding,
-          }}
-          className="book-page"
-        >
-          <div dangerouslySetInnerHTML={{ __html: content }} />
-        </div>
-      </div>
-    );
 }

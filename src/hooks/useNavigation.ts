@@ -1,13 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import usePage from "./usePage";
 
 const useNavigation = (
   changePage: (n: number) => void,
   isOptionMenuVisible: boolean,
 ) => {
-  let [pageWidth, pageHeight] = usePage();
-  let longPressTimerRef = useRef<null | number>(null);
-  let selectedText = useRef("");
+  const [pageWidth, pageHeight] = usePage();
+  const longPressTimerRef = useRef<null | number>(null);
+  const selectedText = useRef("");
+
+  const handlePageClick = useCallback(
+    (tapWidth: number, tapHeight: number) => {
+      if (!isOptionMenuVisible) {
+        if (tapWidth / pageWidth <= 0.4 && tapHeight / pageHeight < 0.8) {
+          changePage(-1);
+        }
+        if (tapWidth / pageWidth > 0.4 && tapHeight / pageHeight < 0.8) {
+          changePage(1);
+        }
+      }
+    },
+    [changePage, isOptionMenuVisible, pageWidth, pageHeight],
+  );
 
   useEffect(() => {
     const handleSelection = () => {
@@ -20,7 +34,7 @@ const useNavigation = (
     return () => {
       document.removeEventListener("selectionchange", handleSelection);
     };
-  });
+  }, []); // dependency array can be empty because it doesn't use anything from component scope
 
   useEffect(() => {
     const handleTouchStart = () => {
@@ -33,7 +47,7 @@ const useNavigation = (
       if (longPressTimerRef.current && selectedText.current) {
         clearTimeout(longPressTimerRef.current);
         longPressTimerRef.current = null;
-        let { pageX, pageY } = event.touches[0];
+        const { pageX, pageY } = event.touches[0];
         handlePageClick(pageX, pageY);
       }
     };
@@ -45,7 +59,7 @@ const useNavigation = (
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [pageWidth]);
+  }, [pageWidth, handlePageClick]);
 
   useEffect(() => {
     const handleTouchStart = () => {
@@ -67,16 +81,7 @@ const useNavigation = (
       window.removeEventListener("mousedown", handleTouchStart);
       window.removeEventListener("mouseup", handleTouchEnd);
     };
-  }, [pageWidth, isOptionMenuVisible]);
-
-  const handlePageClick = (tapWidth: number, tapHeight: number) => {
-    if (!isOptionMenuVisible) {
-      if (tapWidth / pageWidth <= 0.4 && tapHeight / pageHeight < 0.8)
-        changePage(-1);
-      if (tapWidth / pageWidth > 0.4 && tapHeight / pageHeight < 0.8)
-        changePage(1);
-    }
-  };
+  }, [pageWidth, isOptionMenuVisible, handlePageClick]);
 };
 
 export default useNavigation;

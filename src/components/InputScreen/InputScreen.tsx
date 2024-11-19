@@ -1,4 +1,4 @@
-import React, { ChangeEvent, DragEvent, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, useState } from "react";
 import styles from "./InputScreen.module.css";
 
 interface InputScreenProps {
