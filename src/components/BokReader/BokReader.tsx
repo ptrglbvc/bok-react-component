@@ -1,5 +1,5 @@
 // src/BokReader.tsx
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import useEpub from "../../hooks/useEpub"; // Import the modified hook
 import Book from "../Book";
@@ -11,9 +11,7 @@ const ScopedGlobalStyle = createGlobalStyle<{
   fontFamily: string;
   fontSize: number;
 }>`
-  // Target the main wrapper class provided by BokReaderWrapper
   .bok-reader-container {
-    // Base container styles (previously root/body)
     font-family: ${(props) => props.fontFamily}, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -21,9 +19,9 @@ const ScopedGlobalStyle = createGlobalStyle<{
     color-scheme: dark light;
     color: rgb(215, 215, 215);
     background-color: black;
-    height: 100%; // Fill container
-    width: 100%; // Fill container
-    overflow: hidden; // Outer container clips everything
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
      &::-webkit-scrollbar { display: none; }
@@ -31,19 +29,13 @@ const ScopedGlobalStyle = createGlobalStyle<{
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    container-type: size;
 
-    // -- CSS Variables are applied via inline style on BokReaderWrapper --
-    // -- var(--side-padding), var(--font-size), etc. are available to nested rules --
-
-    // --- Book Page Column Layout (Restored from original CSS) ---
     .book-page {
         margin: 0;
         font-family: var(--font-family);
-        // Padding defines the content area *within* which columns flow
         padding: var(--top-padding) var(--side-padding) var(--bottom-padding);
-        // Height calculation is critical for columns to fill vertically
-        // It should be based on the container height (100%) minus vertical padding
-        height: calc(100% - (var(--top-padding) + var(--bottom-padding)));
+        height: 100%;
         text-shadow: 2px 2px 5px rgba(0, 0, 0); // Keep stylistic choice
         font-size: var(--font-size);
 
@@ -55,18 +47,16 @@ const ScopedGlobalStyle = createGlobalStyle<{
         // Enable horizontal scrolling of the columns
         overflow-x: scroll;
         overflow-y: hidden; // Prevent vertical scrollbar on the container itself
-        width: 100%; // The column container takes the full width
         scroll-snap-type: x mandatory; // Snap pages (columns)
         scroll-behavior: auto; // Let JS handle smooth scrolling during page turns
         -webkit-overflow-scrolling: touch; // Momentum scroll on iOS
         box-sizing: border-box; // Include padding in width/height calculations
 
 
-        // Hide the scrollbar for the horizontal column scrolling
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
          &::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
          }
 
         // Content *inside* the columns
@@ -77,49 +67,40 @@ const ScopedGlobalStyle = createGlobalStyle<{
          }
     }
 
-
-    // --- Media Queries for Column Count/Width ---
-     @media screen and (orientation: landscape) {
+    @container (aspect-ratio > 1/1) {
         .book-page {
             column-count: 2;
             -moz-column-count: 2;
             -webkit-column-count: 2;
-            // Define column width based on 2 columns layout
-            column-width: calc(50% - var(--side-padding)); // Half width minus half gap
+            column-width: calc(50% - var(--side-padding));
             -webkit-column-width: calc(50% - var(--side-padding));
-        }
 
-        .book-page img,
-        .book-page svg {
-            // Max width is the calculated column width
-            max-width: calc(50% - var(--side-padding)) !important;
+            img, svg {
+                max-width: calc(50% - var(--side-padding)) !important;
+            }
         }
-     }
+    }
 
-     @media screen and (orientation: portrait) {
+    @container (aspect-ratio <= 1/1) {
         .book-page {
             column-count: 1;
             -moz-column-count: 1;
             -webkit-column-count: 1;
-            // Define column width based on 1 column layout
-            column-width: 100%; // Takes full width (padding is handled by parent)
+            column-width: 100%;
             -webkit-column-width: 100%;
-        }
 
-        .book-page img,
-        .book-page svg {
-            // Max width is the container width minus padding (effectively column width)
-             max-width: 100% !important; // Let the padding contain it
+            img, svg {
+                max-width: 100% !important;
+            }
         }
-     }
+    }    // --- Styles for Images/SVG within Columns ---
 
-    // --- Styles for Images/SVG within Columns ---
     .book-page img,
     .book-page svg {
-        border-radius: 10px; // Keep styling
+        border-radius: 10px;
         // Max height respects the vertical padding of the book-page container
         max-height: calc(100% - var(--top-padding) - var(--bottom-padding)) !important;
-        display: block; // Prevent extra bottom space
+        display: block;
         margin-left: auto; // Center if smaller than column width
         margin-right: auto;
         object-fit: contain; // Fit without distortion
@@ -211,6 +192,8 @@ const BokReader: React.FC<BokReaderProps> = ({
   const [sidePadding, setSidePadding] = useState(30); // Default padding
   const [fontFamily, setFontFamily] = useState("Inter"); // Default font
 
+  const bokReaderWrapperRef = useRef<HTMLDivElement>(null);
+
   // --- Effects to handle epub source and hook state changes ---
 
   // Load EPUB when the source prop changes
@@ -278,6 +261,7 @@ const BokReader: React.FC<BokReaderProps> = ({
     <BokReaderWrapper
       className={`bok-reader-container ${className || ""}`}
       style={{ ...style, ...dynamicCssVariables } as React.CSSProperties} // Apply CSS vars
+      ref={bokReaderWrapperRef}
     >
       <ScopedGlobalStyle fontFamily={fontFamily} fontSize={fontSize} />
       <LoadingScreen isLoading={isLoading} />
@@ -287,8 +271,7 @@ const BokReader: React.FC<BokReaderProps> = ({
         <>
           <Book
             content={rawContent}
-            title={title} // Pass title if Book needs it
-            // Pass state setters down to Book/OptionsMenu
+            title={title}
             setIsLoading={() => {
               /* Let useEpub handle loading state */
             }}
@@ -299,6 +282,7 @@ const BokReader: React.FC<BokReaderProps> = ({
             setFontSize={setFontSize}
             setFontFamily={setFontFamily}
             isOptionMenuVisible={isOptionsMenuVisible} // For navigation hook inside Book
+            containerElementRef={bokReaderWrapperRef}
           />
 
           {/* Render Options Menu when visible */}

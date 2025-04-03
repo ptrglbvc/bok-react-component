@@ -1,34 +1,18 @@
-// src/App.tsx (Website project using the BokReader library)
-
-import React, { useState, useCallback } from "react";
-
-// Import the BokReader component from your built library
+import { useState, useCallback } from "react";
 import BokReader from "./components/BokReader/BokReader";
-// If you only have a default export: import BokReader from 'bok-reader-core';
-
-// Keep the local InputScreen component for the initial file selection
 import InputScreen from "./components/InputScreen/InputScreen";
 
-// Optional: Import any global CSS specific to the *website shell* itself,
-// ensuring it doesn't conflict with BokReader's scoped styles.
-// import './index.css'; // Be careful with this file now! Review it.
-
 function App() {
-  // State to hold the EPUB file provided by the user
   const [epubFile, setEpubFile] = useState<File | null>(null);
-
-  // Callback for the InputScreen component
   const handleFileSelected = useCallback((file: File) => {
-    // Basic validation (optional, BokReader might do more)
     if (file && file.type === "application/epub+zip") {
       setEpubFile(file); // Set the file state to trigger BokReader rendering
     } else {
       alert("Please select a valid .epub file.");
       setEpubFile(null); // Ensure it's null if invalid
     }
-  }, []); // useCallback to keep the function reference stable
+  }, []); // Callback from BokReader when the title is parsed
 
-  // Callback from BokReader when the title is parsed
   const handleReaderTitleChange = useCallback((title: string) => {
     if (title && title !== "Loading...") {
       document.title = title; // Update the browser tab title
@@ -63,7 +47,7 @@ function App() {
         // If an epub file IS loaded, render the BokReader component
         // It's crucial to give BokReader a defined size.
         // This div makes it fill the viewport.
-        <div style={{ width: "100vw", height: "100svh", overflow: "hidden" }}>
+        <div style={{ width: "300px", height: "500px", overflow: "hidden" }}>
           <BokReader
             epubDataSource={epubFile} // Pass the file object to the reader
             onTitleChange={handleReaderTitleChange} // Get title updates

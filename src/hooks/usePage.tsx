@@ -1,35 +1,60 @@
-//@ts-ignore
-import { useState, useEffect } from "react";
+// src/hooks/usePage.tsx
+import { useState, useEffect, RefObject } from "react";
 
-export default function usePage() {
-    const getBodyRect = () => document.body.getBoundingClientRect();
-    let [height, setHeight] = useState(getBodyRect().height);
-    let [width, setWidth] = useState(
-        getBodyRect().height < getBodyRect().width
-            ? getBodyRect().width / 2
-            : getBodyRect().width
-    );
-    let [noOfPages, setNoOfPages] = useState(
-        getBodyRect().height < getBodyRect().width ? 2 : 1
-    );
+export default function usePage(containerRef: RefObject<Element | null>) {
+  // Start with initial state
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+    noOfPages: 1,
+  });
+
+  useEffect(() => {
+    // All logic now happens inside useEffect, guaranteeing the initial render is complete.
+    const containerElement = containerRef?.current; // Use optional chaining for safety
 
     const updatePageDimensions = () => {
-        if (getBodyRect().height < getBodyRect().width) {
-            setHeight(getBodyRect().height);
-            setWidth(getBodyRect().width / 2);
-            setNoOfPages(2);
-        } else {
-            setHeight(getBodyRect().height);
-            setWidth(getBodyRect().width);
-            setNoOfPages(1);
-        }
+      if (containerElement) {
+        const rect = containerElement.getBoundingClientRect();
+        const isLandscape = rect.height < rect.width;
+        // Only update state if dimensions actually change to avoid infinite loops
+        setDimensions((prev) => {
+          const newWidth = isLandscape ? rect.width / 2 : rect.width;
+          const newHeight = rect.height;
+          const newNoOfPages = isLandscape ? 2 : 1;
+          if (
+            prev.width !== newWidth ||
+            prev.height !== newHeight ||
+            prev.noOfPages !== newNoOfPages
+          ) {
+            return {
+              width: newWidth,
+              height: newHeight,
+              noOfPages: newNoOfPages,
+            };
+          }
+          return prev; // No change
+        });
+      } else {
+        // Reset if element disappears
+        setDimensions({ width: 0, height: 0, noOfPages: 1 });
+      }
     };
 
-    useEffect(() => {
-        window.addEventListener("resize", updatePageDimensions);
-        return () => {
-            window.removeEventListener("resize", updatePageDimensions);
-        };
-    }, []);
-    return [width, height, noOfPages];
+    if (containerElement) {
+      updatePageDimensions(); // Calculate initial dimensions once element exists
+      const resizeObserver = new ResizeObserver(updatePageDimensions);
+      resizeObserver.observe(containerElement);
+      return () => {
+        resizeObserver.unobserve(containerElement);
+      };
+    }
+    // If containerElement is null initially, the effect will re-run when
+    // the ref object's .current property is populated by React,
+    // triggering a state update in the parent, causing Book to re-render,
+    // and this effect runs again.
+  }, [containerRef]); // Dependency on the ref object itself
+
+  // Return the current state
+  return [dimensions.width, dimensions.height, dimensions.noOfPages];
 }
