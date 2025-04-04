@@ -4,8 +4,9 @@ import usePage from "./usePage";
 const useNavigation = (
   changePage: (n: number) => void,
   isOptionMenuVisible: boolean,
+  containerElementRef: React.RefObject<HTMLDivElement>,
 ) => {
-  const [pageWidth, pageHeight] = usePage();
+  const [pageWidth, pageHeight] = usePage(containerElementRef);
   const longPressTimerRef = useRef<null | number>(null);
   const selectedText = useRef("");
 

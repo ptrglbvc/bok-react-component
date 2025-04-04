@@ -295,6 +295,7 @@ export default function useEpub() {
     isLoading,
     error, // Expose error state
     loadEpub, // Expose the function to trigger loading
+    setIsLoading,
     // Note: setIsLoading is not exposed; loading is controlled internally by loadEpub
   };
 }

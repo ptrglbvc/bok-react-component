@@ -184,7 +184,8 @@ const BokReader: React.FC<BokReaderProps> = ({
   style,
 }) => {
   // Use the modified hook
-  const { title, rawContent, isLoading, error, loadEpub } = useEpub();
+  const { title, rawContent, isLoading, error, loadEpub, setIsLoading } =
+    useEpub();
 
   // State for user-configurable options
   const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
@@ -267,14 +268,12 @@ const BokReader: React.FC<BokReaderProps> = ({
       <LoadingScreen isLoading={isLoading} />
 
       {/* Render Book only if content is ready and not loading */}
-      {rawContent && !isLoading && (
+      {rawContent && (
         <>
           <Book
             content={rawContent}
             title={title}
-            setIsLoading={() => {
-              /* Let useEpub handle loading state */
-            }}
+            setIsLoading={setIsLoading}
             fontSize={fontSize}
             sidePadding={sidePadding}
             fontFamily={fontFamily}
@@ -295,10 +294,7 @@ const BokReader: React.FC<BokReaderProps> = ({
               setPadding={setSidePadding}
               setFontSize={setFontSize}
               setFontFamily={setFontFamily}
-              // Pass setIsLoading from useEpub if OptionsMenu needs to trigger global load indicator
-              setIsLoading={() => {
-                /* Let useEpub handle loading state */
-              }}
+              setIsLoading={setIsLoading}
             />
           )}
 
