@@ -39,7 +39,7 @@ const useNavigation = (
 
   useEffect(() => {
     const handleTouchStart = () => {
-      longPressTimerRef.current = setTimeout(() => {
+      longPressTimerRef.current = window.setTimeout(() => {
         longPressTimerRef.current = null;
       }, 500);
     };
@@ -64,7 +64,7 @@ const useNavigation = (
 
   useEffect(() => {
     const handleTouchStart = () => {
-      longPressTimerRef.current = setTimeout(() => {}, 200);
+      longPressTimerRef.current = window.setTimeout(() => {}, 200);
     };
 
     const handleTouchEnd = (event: MouseEvent) => {
