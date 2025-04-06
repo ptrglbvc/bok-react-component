@@ -1,23 +1,30 @@
 .options-menu-overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); /* End state */
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.3s ease-out;
+    opacity: 1; /* End state */
+    container-type: size;
+    container-name: options-overlay;
+    transition:
+        opacity 0.3s ease-out,
+        backdrop-filter 0.3s ease-out; /* Added backdrop-filter */
+    overflow: hidden;
 }
 
 .options-menu-overlay.fade-out {
-    opacity: 0;
+    opacity: 0; /* Start state for fade-out */
+    backdrop-filter: blur(0px); /* Start state for blur fade-out */
 }
 
 .options-menu {
     position: absolute;
     bottom: 0;
+    left: 0;
     width: 100%;
     max-width: 500px;
     background: #1e1e1e;
@@ -28,22 +35,35 @@
     color: #fff;
     max-height: 50%;
     overflow-y: auto;
-    /* transform: translateY(0); */
+    transform: translateY(100%);
     transition: transform 0.3s ease-out;
 }
 
-@media only screen and (min-width: 500px) {
+@container options-overlay (aspect-ratio &gt; 1/1) {
     .options-menu {
-        left: calc(50% - 250px);
-        /* transform: translateX(-50%); */
+        left: 50%;
+        width: auto;
+        transform: translateX(-50%) translateY(100%);
     }
-    .options-menu.slide-down {
-        transform: translateY(100%);
+}
+
+.options-menu.visible {
+    transform: translateY(0);
+}
+
+@container options-overlay (aspect-ratio &gt; 1/1) {
+    .options-menu.visible {
+        transform: translateX(-50%) translateY(0);
     }
 }
 
 .options-menu.slide-down {
     transform: translateY(100%);
+}
+@container options-overlay (aspect-ratio &gt; 1/1) {
+    .options-menu.slide-down {
+        transform: translateX(-50%) translateY(100%);
+    }
 }
 
 .close-button {
@@ -138,5 +158,5 @@
 
 .option-value.animate {
     opacity: 0.5;
-    transform: scale(1.2) rotate(0.02turn); /* Slightly enlarged and rotated for emphasis */
+    transform: scale(1.2) rotate(0.02turn);
 }

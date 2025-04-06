@@ -47,7 +47,7 @@ function App() {
         // If an epub file IS loaded, render the BokReader component
         // It's crucial to give BokReader a defined size.
         // This div makes it fill the viewport.
-        <div style={{ width: "300px", height: "500px", overflow: "hidden" }}>
+        <div style={{ width: "700px", height: "500px", overflow: "hidden" }}>
           <BokReader
             epubDataSource={epubFile} // Pass the file object to the reader
             onTitleChange={handleReaderTitleChange} // Get title updates

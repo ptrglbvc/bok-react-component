@@ -4,41 +4,27 @@ import { useState, useCallback } from "react";
 
 type BlobImages = { [key: string]: string };
 
-// Helper to resolve relative paths within the EPUB structure
-function resolvePath(relativePath: string, basePath: string): string {
-  if (!basePath) return relativePath; // If no base path, assume root relative
-  // Basic resolution: Combine base path and relative path
-  // More robust URL resolution is better, but this covers common cases.
-  const combined = basePath + relativePath;
-  // Handle '../' - This is a simplified version. A robust solution is more complex.
-  const parts = combined.split("/");
-  const resolvedParts = [];
-  for (const part of parts) {
-    if (part === "..") {
-      resolvedParts.pop(); // Go up one level
-    } else if (part !== "." && part !== "") {
-      resolvedParts.push(part);
-    }
-  }
-  return resolvedParts.join("/");
-}
-
 export default function useEpub() {
   const [rawContent, setRawContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
-  const [error, setError] = useState<string | null>(null); // Exposed error state for the consumer
+  const [error, setError] = useState<string | null>(null);
 
-  // Internal state holders - reset on new load
   let currentZip: JSZip | null = null;
   let currentObfFolder = "";
   let currentImages: BlobImages = {};
   let currentStyle = "";
   let styleLinkElement: HTMLLinkElement | null = null;
 
-  // Function called by the BokReader component to load the EPUB data
+  const validTypes = [
+    "text/html",
+    "text/xml",
+    "application/xml",
+    "application/xhtml+xml",
+    "image/svg+xml",
+  ];
+
   const loadEpub = useCallback(async (source: File | ArrayBuffer) => {
-    // Reset all state when loading a new source - CRITICAL for component reuse
     setIsLoading(true);
     setRawContent("");
     setTitle("Loading...");
@@ -48,9 +34,8 @@ export default function useEpub() {
     currentImages = {};
     currentStyle = "";
     if (styleLinkElement) {
-      // Remove old styles
       document.head.removeChild(styleLinkElement);
-      URL.revokeObjectURL(styleLinkElement.href); // Clean up blob URL
+      URL.revokeObjectURL(styleLinkElement.href);
       styleLinkElement = null;
     }
 
@@ -64,15 +49,14 @@ export default function useEpub() {
       currentZip = await JSZip.loadAsync(buffer);
       await readContainer();
     } catch (err: unknown) {
-      // Use unknown instead of any for better type safety
       const errorMessage = err instanceof Error ? err.message : String(err);
       console.error("Error processing EPUB source:", err);
       setError(errorMessage || "Failed to load EPUB.");
-      setRawContent(""); // Ensure content is empty on error
+      setRawContent("");
       setTitle("");
       setIsLoading(false);
     }
-  }, []); // Empty dependency array ensures this function reference is stable
+  }, []);
 
   async function readContainer() {
     if (!currentZip) throw new Error("Zip not loaded");
@@ -85,7 +69,7 @@ export default function useEpub() {
     const opfPath = getOpfPath(containerContent);
     if (!opfPath) throw new Error("OPF file path not found in container.xml.");
 
-    currentObfFolder = opfPath.substring(0, opfPath.lastIndexOf("/") + 1); // Get directory containing OPF
+    currentObfFolder = opfPath.substring(0, opfPath.lastIndexOf("/") + 1);
 
     const opfFile = currentZip.file(opfPath);
     if (!opfFile) throw new Error(`OPF file not found at path: ${opfPath}`);
@@ -102,7 +86,7 @@ export default function useEpub() {
     }
 
     getTitle(parsedOpf);
-    await parseManifestAndSpine(parsedOpf); // Process based on OPF data
+    await parseManifestAndSpine(parsedOpf);
   }
 
   function getOpfPath(containerContent: string): string | null {
@@ -115,8 +99,7 @@ export default function useEpub() {
       'rootfile[media-type="application/oebps-package+xml"]',
     );
     const fullPath = rootfile?.getAttribute("full-path");
-    if (fullPath == null || fullPath == undefined) return null;
-    else return fullPath;
+    return fullPath ?? null;
   }
 
   function getTitle(opf: Document) {
@@ -129,7 +112,6 @@ export default function useEpub() {
   async function parseManifestAndSpine(opf: Document) {
     if (!currentZip) return;
 
-    // Map manifest items by ID for quick lookup
     const manifestItems: { [id: string]: { href: string; type: string } } = {};
     opf.querySelectorAll("manifest > item").forEach((item) => {
       const id = item.getAttribute("id");
@@ -140,47 +122,42 @@ export default function useEpub() {
       }
     });
 
-    // Get spine order (reading order)
     const spineRefs = Array.from(opf.querySelectorAll("spine > itemref")).map(
       (ref) => ref.getAttribute("idref"),
     );
 
     let combinedContent = "";
-    const loadedCssHrefs = new Set<string>(); // Track loaded CSS to avoid duplicates
+    const loadedCssHrefs = new Set<string>();
 
-    // Process spine items first for reading content
     for (const idref of spineRefs) {
       if (!idref) continue;
       const item = manifestItems[idref];
       if (item) {
-        const itemPath = resolvePath(item.href, currentObfFolder);
-        const itemFile = currentZip.file(itemPath);
+        const itemFetchPath = currentObfFolder + item.href;
+        const itemFile = currentZip.file(itemFetchPath);
         if (
           itemFile &&
           (item.type.includes("html") || item.type.includes("xml"))
         ) {
-          // Process only text-based content files
           try {
             const itemContent = await itemFile.async("text");
             const processedContent = await processContentItem(
               itemContent,
               item.type,
             );
-            combinedContent += `<div class="bok-chapter">${processedContent}</div>`; // Wrap each spine item
+            combinedContent += `<div class="bok-chapter">${processedContent}</div>`;
           } catch (e) {
-            console.warn(`Failed to process spine item ${itemPath}:`, e);
+            console.warn(`Failed to process spine item ${itemFetchPath}:`, e);
           }
         }
       }
     }
 
-    // Process manifest for CSS (needed even if not in spine)
     for (const id in manifestItems) {
       const item = manifestItems[id];
       if (item.type.includes("css")) {
-        const cssPath = resolvePath(item.href, currentObfFolder);
+        const cssPath = currentObfFolder + item.href;
         if (!loadedCssHrefs.has(cssPath)) {
-          // Avoid loading same CSS file multiple times
           const cssFile = currentZip.file(cssPath);
           if (cssFile) {
             try {
@@ -194,98 +171,127 @@ export default function useEpub() {
       }
     }
 
-    addStyling(); // Apply collected styles
+    addStyling();
     setRawContent(combinedContent);
-    setIsLoading(false); // Finished loading
+    setIsLoading(false);
   }
 
-  // Processes a single content item (HTML/XML) - removes inline styles and cleans images
   async function processContentItem(
     content: string,
     type: string,
   ): Promise<string> {
-    let processed = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ""); // Remove inline <style> blocks
-    processed = await cleanImagePaths(processed, type);
+    let processed = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+    processed = await cleanImages(processed, type);
     return processed;
   }
 
-  async function cleanImagePaths(
-    document: string,
-    type: string,
-  ): Promise<string> {
-    if (!currentZip || !(type.includes("html") || type.includes("xml"))) {
-      return document; // Only process parsable types and if zip exists
-    }
+  // --- Image Logic with Error Handling ---
 
-    try {
-      const parser = new DOMParser();
-      //@ts-expect-error trust me bro
-      const newDocument = parser.parseFromString(document, type);
-      const parserError = newDocument.querySelector("parsererror");
-      if (parserError) {
-        console.warn(
-          "Parser error in content item, skipping image processing.",
+  async function cleanImages(document: string, type: string): Promise<string> {
+    const parser = new DOMParser();
+
+    if (validTypes.includes(type)) {
+      try {
+        // Error handling for DOM parsing/serialization
+        const newDocument = parser.parseFromString(
+          document,
+          type as DOMParserSupportedType,
         );
-        return document; // Return original if parsing this specific item fails
-      }
-
-      const imageElements = Array.from(
-        newDocument.querySelectorAll("img, image"),
-      ); // Handle <img> and <image> (SVG)
-
-      for (const img of imageElements) {
-        const srcAttr =
-          img.tagName.toLowerCase() === "img" ? "src" : "xlink:href";
-        const src = img.getAttribute(srcAttr);
-
-        if (src) {
-          const absoluteSrc = resolvePath(src, currentObfFolder); // Resolve path relative to OPF directory
-
-          if (currentImages[absoluteSrc] === undefined) {
-            // Check cache only if not already processed (even if failed)
-            const imgFile = currentZip.file(absoluteSrc);
-            if (imgFile) {
-              try {
-                const blob = await imgFile.async("blob");
-                const url = URL.createObjectURL(blob);
-                currentImages[absoluteSrc] = url; // Cache successfully created blob URL
-              } catch (e) {
-                console.warn(`Could not load image blob ${absoluteSrc}:`, e);
-                currentImages[absoluteSrc] = ""; // Cache failure as empty string
-              }
-            } else {
-              console.warn(`Image file not found in zip: ${absoluteSrc}`);
-              currentImages[absoluteSrc] = ""; // Cache failure as empty string
-            }
-          }
-
-          // Set the resolved & cached path (even if empty string for broken images)
-          img.setAttribute(srcAttr, currentImages[absoluteSrc]);
+        const parserError = newDocument.querySelector("parsererror");
+        if (parserError) {
+          // Error handling for malformed HTML/XML
+          console.warn(
+            "Parser error in content item during cleanImages, skipping.",
+            parserError.textContent,
+          );
+          return document;
         }
+
+        const imgs = newDocument.querySelectorAll("img");
+        for (const img of imgs) {
+          await formatImg(img);
+        }
+        const xmlImages = newDocument.querySelectorAll("image");
+        for (const image of xmlImages) {
+          await formatXMLImage(image);
+        }
+
+        const seri = new XMLSerializer();
+        const newDoc = seri.serializeToString(
+          newDocument.documentElement || newDocument,
+        );
+        return newDoc;
+      } catch (error) {
+        console.error("Error during cleanImages DOM processing:", error);
+        return document;
       }
-      // Serialize potentially modified document back to string
-      const serializer = new XMLSerializer();
-      // Handle potential differences in XML vs HTML serialization if needed, but this usually works
-      return serializer.serializeToString(
-        newDocument.documentElement || newDocument,
-      );
-    } catch (error) {
-      console.error("Error during image path cleaning:", error);
-      return document; // Return original on unexpected error
-    }
+    } else return document;
   }
 
-  function addStyling() {
-    if (!currentStyle.trim()) return; // Don't add empty styles
+  async function formatImg(img: Element) {
+    let src = img.getAttribute("src") as string;
+    if (!src) return;
 
+    while (src.startsWith(".") || src.startsWith("/")) src = src.slice(1);
+    src = currentObfFolder + src;
+
+    if (currentImages[src] === undefined) {
+      const imgFile = currentZip?.file(src); // Error handling: Check if file exists
+      if (imgFile) {
+        try {
+          // Error handling for blob creation
+          const blob = await imgFile.async("blob");
+          const url = URL.createObjectURL(blob);
+          currentImages[src] = url;
+        } catch (e) {
+          console.warn(`Could not load image blob (formatImg) ${src}:`, e);
+          currentImages[src] = ""; // Cache failure on error
+        }
+      } else {
+        console.warn(`Image file not found in zip (formatImg): ${src}`);
+        currentImages[src] = ""; // Cache failure if file not found
+      }
+    }
+    img.setAttribute("src", currentImages[src]);
+  }
+
+  async function formatXMLImage(image: Element) {
+    let src = image.getAttribute("xlink:href") as string;
+    if (!src) return;
+
+    while (src.startsWith(".") || src.startsWith("/")) src = src.slice(1);
+    src = currentObfFolder + src;
+
+    if (currentImages[src] === undefined) {
+      const imgFile = currentZip?.file(src); // Error handling: Check if file exists
+      if (imgFile) {
+        try {
+          // Error handling for blob creation
+          const blob = await imgFile.async("blob");
+          const url = URL.createObjectURL(blob);
+          currentImages[src] = url;
+        } catch (e) {
+          console.warn(`Could not load image blob (formatXMLImage) ${src}:`, e);
+          currentImages[src] = ""; // Cache failure on error
+        }
+      } else {
+        console.warn(`Image file not found in zip (formatXMLImage): ${src}`);
+        currentImages[src] = ""; // Cache failure if file not found
+      }
+    }
+    image.setAttribute("xlink:href", currentImages[src]);
+  }
+
+  // --- End of Image Logic ---
+
+  function addStyling() {
+    if (!currentStyle.trim()) return;
     const styleBlob = new Blob([currentStyle], { type: "text/css" });
     const blobURL = URL.createObjectURL(styleBlob);
-
-    styleLinkElement = document.createElement("link"); // Store reference to remove later
+    styleLinkElement = document.createElement("link");
     styleLinkElement.href = blobURL;
     styleLinkElement.rel = "stylesheet";
     styleLinkElement.setAttribute("data-bok-reader-style", "true");
-
     document.head.appendChild(styleLinkElement);
   }
 
@@ -293,9 +299,8 @@ export default function useEpub() {
     title,
     rawContent,
     isLoading,
-    error, // Expose error state
-    loadEpub, // Expose the function to trigger loading
+    error,
+    loadEpub,
     setIsLoading,
-    // Note: setIsLoading is not exposed; loading is controlled internally by loadEpub
   };
 }

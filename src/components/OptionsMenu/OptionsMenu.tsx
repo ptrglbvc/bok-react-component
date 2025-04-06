@@ -22,18 +22,25 @@ function OptionsMenu({
   setFontSize,
   setPadding,
   setFontFamily,
-  //not yet implemented. trouble with closing reseting all the state
-  //I want to retry this as soon as I clean up the state management
   setIsLoading,
 }: OptionsMenuProps) {
   const [isClosing, setIsClosing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const fontValueRef = useRef<HTMLSpanElement>(null);
   const paddingValueRef = useRef<HTMLSpanElement>(null);
 
   const supportedFonts = ["Inter", "Roboto", "Merriweather"];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleClose = () => {
+    setIsVisible(false);
     setIsClosing(true);
   };
 
@@ -103,7 +110,7 @@ function OptionsMenu({
       onClick={handleOverlayClick}
     >
       <div
-        className={`options-menu ${isClosing ? "slide-down" : ""}`}
+        className={`options-menu ${isVisible ? "visible" : ""} ${isClosing ? "slide-down" : ""}`}
         onClick={handleMenuClick}
       >
         <button onClick={handleClose} className="close-button">
@@ -117,6 +124,7 @@ function OptionsMenu({
               onChange={(e) => {
                 if (supportedFonts.includes(e.target.value)) {
                   setFontFamily(e.target.value);
+                  setIsLoading(true); // Assume font change requires loading
                 }
               }}
             >

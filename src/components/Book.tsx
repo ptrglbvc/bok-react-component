@@ -176,7 +176,6 @@ export default function Book({
     const currentBookRef = bookRef.current;
 
     if (pageWidth <= 0 || pageHeight <= 0 || !currentBookRef) {
-      // Still waiting for layout or ref
       return;
     }
 
@@ -194,7 +193,7 @@ export default function Book({
         setIsLoading(false);
         setCurrentPage(1);
       }
-    }, 100);
+    }, 500);
 
     document.addEventListener("keydown", turnPage);
 
@@ -212,7 +211,7 @@ export default function Book({
     fontFamily,
     title,
     calculateThePages,
-    updatePage,
+    // updatePage,
     turnPage,
     setIsLoading,
   ]);
