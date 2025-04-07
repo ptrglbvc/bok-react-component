@@ -1,25 +1,26 @@
 import { RefObject, useEffect, useState } from "react";
 
-export default function usePercentageRead(bookRef: RefObject<HTMLDivElement>) {
-    let [percentRead, setPercentRead] = useState(0);
+export default function usePercentageRead(
+  bookRef: RefObject<HTMLDivElement>,
+): [number, React.Dispatch<React.SetStateAction<number>>] {
+  const [percentRead, setPercentRead] = useState(0);
 
-    useEffect(() => {
-        const calculateThePercentage = () => {
-            if (bookRef.current) {
-                let totalWidth =
-                    bookRef.current.scrollWidth - window.innerWidth;
-                let windowScrollLeft = bookRef.current.scrollLeft;
-                setPercentRead(windowScrollLeft / totalWidth);
-            }
-        };
-        bookRef.current?.addEventListener("scroll", calculateThePercentage);
+  useEffect(() => {
+    const calculateThePercentage = () => {
+      if (bookRef.current) {
+        const totalWidth = bookRef.current.scrollWidth;
+        const windowScrollLeft = bookRef.current.scrollLeft;
+        setPercentRead(windowScrollLeft / totalWidth);
+      }
+    };
+    bookRef.current?.addEventListener("scroll", calculateThePercentage);
 
-        return () => {
-            bookRef.current?.removeEventListener(
-                "scroll",
-                calculateThePercentage
-            );
-        };
-    });
-    return { percentRead, setPercentRead };
+    const scrollRef = bookRef.current;
+
+    return () => {
+      scrollRef?.removeEventListener("scroll", calculateThePercentage);
+    };
+  }, [bookRef]);
+
+  return [percentRead, setPercentRead];
 }

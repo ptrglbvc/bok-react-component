@@ -7,6 +7,7 @@ const useNavigation = (
   containerElementRef: React.RefObject<HTMLDivElement>,
 ) => {
   const [pageWidth, pageHeight] = usePage(containerElementRef);
+  console.log(pageWidth);
   const longPressTimerRef = useRef<null | number>(null);
   const selectedText = useRef("");
 
@@ -63,6 +64,8 @@ const useNavigation = (
   }, [pageWidth, handlePageClick]);
 
   useEffect(() => {
+    const container = containerElementRef.current;
+
     const handleTouchStart = () => {
       longPressTimerRef.current = window.setTimeout(() => {}, 200);
     };
@@ -75,14 +78,14 @@ const useNavigation = (
       }
     };
 
-    window.addEventListener("mousedown", handleTouchStart);
-    window.addEventListener("mouseup", handleTouchEnd);
+    container?.addEventListener("mousedown", handleTouchStart);
+    container?.addEventListener("mouseup", handleTouchEnd);
 
     return () => {
-      window.removeEventListener("mousedown", handleTouchStart);
-      window.removeEventListener("mouseup", handleTouchEnd);
+      container?.removeEventListener("mousedown", handleTouchStart);
+      container?.removeEventListener("mouseup", handleTouchEnd);
     };
-  }, [pageWidth, isOptionMenuVisible, handlePageClick]);
+  }, [pageWidth, isOptionMenuVisible, handlePageClick, containerElementRef]);
 };
 
 export default useNavigation;

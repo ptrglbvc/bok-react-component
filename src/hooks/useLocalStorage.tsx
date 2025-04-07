@@ -9,7 +9,7 @@ export default function useLocalStorage(
 ) {
   let json = "";
   useEffect(() => {
-    if (percentRead > 0.00001) {
+    if (percentRead > 0.0000001) {
       /* eslint-disable */
       // eslint complains that it's not going persist between rerenders'
       // eslint complains a lot

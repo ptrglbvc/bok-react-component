@@ -44,7 +44,7 @@ export default function Book({
 
   const [pageWidth, pageHeight, noOfPages] = usePage(containerElementRef);
 
-  const { percentRead, setPercentRead } = usePercentageRead(bookRef);
+  const [percentRead, setPercentRead] = usePercentageRead(bookRef);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
 
@@ -62,9 +62,9 @@ export default function Book({
         ) {
           const effectivePageWidth = scrollContainer.clientWidth / noOfPages;
           const newValue = prev + amount;
-          if (newValue >= 1 && newValue <= pageCount) {
+          if (newValue >= 0 && newValue < pageCount) {
             scrollContainer.scroll({
-              left: (newValue - 1) * effectivePageWidth,
+              left: newValue * effectivePageWidth,
               behavior: "smooth",
             });
             return newValue;
@@ -140,17 +140,17 @@ export default function Book({
           newPageCount,
           clientWidth: scrollContainer?.clientWidth,
         });
-        setIsLoading(false);
+        // setIsLoading(false);
         return;
       }
 
       let targetPage = Math.ceil(newPageCount * percentRead);
-      targetPage = Math.max(1, Math.min(newPageCount, targetPage));
+      targetPage = Math.max(0, Math.min(newPageCount, targetPage));
 
       const effectivePageWidth = scrollContainer.clientWidth / noOfPages;
 
       setCurrentPage(targetPage);
-      scrollContainer.scrollLeft = (targetPage - 1) * effectivePageWidth;
+      scrollContainer.scrollLeft = targetPage * effectivePageWidth;
 
       setIsLoading(false);
       // Cannot return cleanup for timeout easily from useCallback
@@ -211,7 +211,7 @@ export default function Book({
     fontFamily,
     title,
     calculateThePages,
-    // updatePage,
+    updatePage,
     turnPage,
     setIsLoading,
   ]);
