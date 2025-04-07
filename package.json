@@ -17,17 +17,20 @@
     },
     "dependencies": {
         "jszip": "^3.10.1",
-        "react-spinners": "^0.13.8"
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "react-spinners": "^0.13.8",
+        "styled-components": "^6.1.8"
     },
     "peerDependencies": {
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
+        "react": "^19.0.0-rc-69d4b800-20241021 || ^19.1.0",
+        "react-dom": "^19.0.0-rc-69d4b800-20241021 || ^19.1.0",
         "styled-components": "^6.1.8"
     },
     "devDependencies": {
         "@types/node": "^22.14.0",
-        "@types/react": "^18.2.56",
-        "@types/react-dom": "^18.2.19",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
         "@typescript-eslint/eslint-plugin": "^7.0.2",
         "@typescript-eslint/parser": "^7.0.2",
         "@vitejs/plugin-react": "^4.2.1",
