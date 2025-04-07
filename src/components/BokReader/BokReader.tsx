@@ -12,7 +12,7 @@ const ScopedGlobalStyle = createGlobalStyle<{
     fontSize: number;
 }>`
   .bok-reader-container {
-    font-family: ${(props) =>
+    font-family: ${(props: { fontFamily: string; fontSize: number }) =>
         props.fontFamily}, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -273,7 +273,7 @@ const BokReader: React.FC<BokReaderProps> = ({
                         setFontSize={setFontSize}
                         setFontFamily={setFontFamily}
                         isOptionMenuVisible={isOptionsMenuVisible} // For navigation hook inside Book
-                        containerElementRef={bokReaderWrapperRef}
+                        containerElementRef={bokReaderWrapperRef} // Remove non-null assertion
                     />
 
                     {/* Render Options Menu when visible */}
