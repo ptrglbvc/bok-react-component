@@ -43,7 +43,6 @@ export default function Book({
     const bookRef = useRef<HTMLDivElement>(null);
 
     const [pageWidth, pageHeight, noOfPages] = usePage(containerElementRef);
-
     const [percentRead, setPercentRead] = usePercentageRead(bookRef);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(0);
@@ -60,12 +59,10 @@ export default function Book({
                     noOfPages > 0 &&
                     scrollContainer.clientWidth > 0
                 ) {
-                    const effectivePageWidth =
-                        scrollContainer.clientWidth / noOfPages;
                     const newValue = prev + amount;
                     if (newValue >= 0 && newValue < pageCount) {
                         scrollContainer.scroll({
-                            left: newValue * effectivePageWidth,
+                            left: newValue * pageWidth,
                             behavior: "smooth",
                         });
                         return newValue;
@@ -74,7 +71,7 @@ export default function Book({
                 return prev;
             });
         },
-        [bookRef, pageCount, noOfPages]
+        [pageWidth, pageCount, noOfPages],
     );
 
     useNavigation(changePage, isOptionMenuVisible, containerElementRef);
@@ -104,121 +101,80 @@ export default function Book({
         setCurrentPage(1);
     }, [title, setPercentRead, setFontSize, setPadding, setFontFamily]);
 
-    const calculateThePages = useCallback(() => {
-        const scrollContainer = bookRef.current;
-        if (
-            scrollContainer &&
-            pageWidth > 0 &&
-            noOfPages > 0 &&
-            scrollContainer.clientWidth > 0
-        ) {
-            const totalWidth = scrollContainer.scrollWidth;
-            const effectivePageWidth = scrollContainer.clientWidth / noOfPages;
-
-            if (effectivePageWidth > 0 && totalWidth > 0) {
-                const newPageCount = Math.ceil(totalWidth / effectivePageWidth);
-                setPageCount(newPageCount);
-                return newPageCount;
-            }
-        }
-        setPageCount(0);
-        return 0;
-    }, [bookRef, pageWidth, noOfPages]);
-
-    const updatePage = useCallback(
-        (newPageCount: number) => {
-            const scrollContainer = bookRef.current;
-
-            if (
-                !scrollContainer ||
-                !noOfPages ||
-                newPageCount <= 0 ||
-                scrollContainer.clientWidth <= 0
-            ) {
-                console.warn(
-                    "updatePage: Cannot update page, invalid conditions.",
-                    {
-                        hasScrollContainer: !!scrollContainer,
-                        noOfPages,
-                        newPageCount,
-                        clientWidth: scrollContainer?.clientWidth,
-                    }
-                );
-                // setIsLoading(false);
-                return;
-            }
-
-            let targetPage = Math.ceil(newPageCount * percentRead);
-            targetPage = Math.max(0, Math.min(newPageCount, targetPage));
-
-            const effectivePageWidth = scrollContainer.clientWidth / noOfPages;
-
-            setCurrentPage(targetPage);
-            scrollContainer.scrollLeft = targetPage * effectivePageWidth;
-
-            setIsLoading(false);
-            // Cannot return cleanup for timeout easily from useCallback
-        },
-        [bookRef, noOfPages, setIsLoading, percentRead, setCurrentPage]
-    );
-
-    const turnPage = useCallback(
-        (event: KeyboardEvent) => {
-            if (event.key === "ArrowLeft") {
-                event.preventDefault();
-                changePage(-1);
-            }
-            if (event.key === "ArrowRight") {
-                event.preventDefault();
-                changePage(1);
-            }
-        },
-        [changePage]
-    );
-
     useEffect(() => {
         const currentBookRef = bookRef.current;
+        if (!currentBookRef || pageWidth <= 0 || pageHeight <= 0) return;
 
-        if (pageWidth <= 0 || pageHeight <= 0 || !currentBookRef) {
-            return;
-        }
-
-        currentBookRef.style.setProperty("--side-padding", `${sidePadding}px`);
-        currentBookRef.style.setProperty("--font-size", `${fontSize}em`);
-        currentBookRef.style.setProperty("--font-family", fontFamily);
-        currentBookRef.style.maxHeight = `${pageHeight}px`;
+        setIsLoading(true);
 
         const timer = setTimeout(() => {
-            const newPageCount = calculateThePages();
+            currentBookRef.style.setProperty(
+                "--side-padding",
+                `${sidePadding}px`,
+            );
+            currentBookRef.style.setProperty("--font-size", `${fontSize}em`);
+            currentBookRef.style.setProperty("--font-family", fontFamily);
+            currentBookRef.style.maxHeight = `${pageHeight}px`;
 
-            if (newPageCount > 0) {
-                updatePage(newPageCount);
+            const totalWidth = currentBookRef.scrollWidth;
+            const newPageCount =
+                pageWidth > 0 && totalWidth > 0
+                    ? Math.floor(totalWidth / pageWidth)
+                    : 0;
+            setPageCount(newPageCount);
+
+            if (newPageCount > 0 && currentBookRef.clientWidth > 0) {
+                let targetPage = Math.round(newPageCount * percentRead);
+                targetPage = Math.max(
+                    0,
+                    Math.min(newPageCount - 1, targetPage),
+                );
+                if (currentPage !== targetPage) {
+                    setCurrentPage(targetPage);
+                    currentBookRef.scrollLeft = targetPage * pageWidth;
+                }
             } else {
                 setIsLoading(false);
                 setCurrentPage(1);
             }
-        }, 500);
-
-        document.addEventListener("keydown", turnPage);
+            setIsLoading(false);
+        }, 400);
 
         return () => {
             clearTimeout(timer);
-            document.removeEventListener("keydown", turnPage);
         };
     }, [
-        content,
-        pageHeight,
+        // @eslint-ignore
         pageWidth,
-        noOfPages,
+        pageHeight,
         sidePadding,
         fontSize,
         fontFamily,
+        noOfPages,
+        content,
         title,
-        calculateThePages,
-        updatePage,
-        turnPage,
         setIsLoading,
+        // currentPage,
+        // percentRead,
     ]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                console.log(pageWidth);
+                changePage(-1);
+            } else if (event.key === "ArrowRight") {
+                event.preventDefault();
+                changePage(1);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [changePage, pageWidth]);
 
     return (
         <>

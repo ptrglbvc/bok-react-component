@@ -7,13 +7,9 @@ import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 
 // These styles apply *only* within BokReaderWrapper thanks to styled-components scoping
-const ScopedGlobalStyle = createGlobalStyle<{
-    fontFamily: string;
-    fontSize: number;
-}>`
+const ScopedGlobalStyle = createGlobalStyle`
   .bok-reader-container {
-    font-family: ${(props: { fontFamily: string; fontSize: number }) =>
-        props.fontFamily}, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
     text-align: justify;
@@ -161,6 +157,7 @@ interface BokReaderProps {
     onError?: (errorMsg: string) => void;
     className?: string;
     style?: React.CSSProperties;
+    supportedFonts?: { displayName: string; name: string }[];
 }
 
 // Wrapper div for scoping styles and establishing positioning context
@@ -179,6 +176,7 @@ const BokReader: React.FC<BokReaderProps> = ({
     onError,
     className,
     style,
+    supportedFonts = [],
 }) => {
     const { title, rawContent, isLoading, error, loadEpub, setIsLoading } =
         useEpub();
@@ -226,7 +224,7 @@ const BokReader: React.FC<BokReaderProps> = ({
             "--font-size": `${fontSize}em`,
             "--font-family": fontFamily,
         }),
-        [sidePadding, fontSize, fontFamily]
+        [sidePadding, fontSize, fontFamily],
     );
 
     // --- Render logic ---
@@ -238,10 +236,7 @@ const BokReader: React.FC<BokReaderProps> = ({
                 className={`bok-reader-container ${className || ""}`}
                 style={style}
             >
-                <ScopedGlobalStyle
-                    fontFamily={fontFamily}
-                    fontSize={fontSize}
-                />
+                <ScopedGlobalStyle />
                 <div style={{ padding: "20px", color: "red" }}>
                     Error loading EPUB: {error}
                 </div>
@@ -256,7 +251,7 @@ const BokReader: React.FC<BokReaderProps> = ({
             style={{ ...style, ...dynamicCssVariables } as React.CSSProperties} // Apply CSS vars
             ref={bokReaderWrapperRef}
         >
-            <ScopedGlobalStyle fontFamily={fontFamily} fontSize={fontSize} />
+            <ScopedGlobalStyle />
             <LoadingScreen isLoading={isLoading} />
 
             {/* Render Book only if content is ready and not loading */}
@@ -286,7 +281,7 @@ const BokReader: React.FC<BokReaderProps> = ({
                             setPadding={setSidePadding}
                             setFontSize={setFontSize}
                             setFontFamily={setFontFamily}
-                            setIsLoading={setIsLoading}
+                            supportedFonts={supportedFonts}
                         />
                     )}
 

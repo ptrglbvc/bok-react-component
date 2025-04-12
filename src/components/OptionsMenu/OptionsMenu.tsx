@@ -11,7 +11,7 @@ interface OptionsMenuProps {
     setFontSize: React.Dispatch<React.SetStateAction<number>>;
     setPadding: React.Dispatch<React.SetStateAction<number>>;
     setFontFamily: React.Dispatch<React.SetStateAction<string>>;
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    supportedFonts: { displayName: string; name: string }[];
 }
 
 function OptionsMenu({
@@ -22,7 +22,7 @@ function OptionsMenu({
     setFontSize,
     setPadding,
     setFontFamily,
-    setIsLoading,
+    supportedFonts,
 }: OptionsMenuProps) {
     const [isClosing, setIsClosing] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
@@ -30,7 +30,10 @@ function OptionsMenu({
     const fontValueRef = useRef<HTMLSpanElement>(null);
     const paddingValueRef = useRef<HTMLSpanElement>(null);
 
-    const supportedFonts = ["Inter", "Roboto", "Merriweather"];
+    const allFonts = [
+        ...supportedFonts,
+        { displayName: "System Default", name: "system-ui" },
+    ];
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -76,7 +79,6 @@ function OptionsMenu({
         if (padding <= 70) {
             setPadding((prev) => prev + 5);
             animateValue(paddingValueRef);
-            setIsLoading(true);
         }
     };
 
@@ -84,7 +86,6 @@ function OptionsMenu({
         if (padding - 5 > 0) {
             setPadding((prev) => prev - 5);
             animateValue(paddingValueRef);
-            setIsLoading(true);
         }
     };
 
@@ -92,7 +93,6 @@ function OptionsMenu({
         if (fontSize < 3) {
             setFontSize((prev) => prev + 0.2);
             animateValue(fontValueRef);
-            setIsLoading(true);
         }
     };
 
@@ -100,7 +100,6 @@ function OptionsMenu({
         if (fontSize - 0.2 > 0.6) {
             setFontSize((prev) => prev - 0.2);
             animateValue(fontValueRef);
-            setIsLoading(true);
         }
     };
 
@@ -124,16 +123,20 @@ function OptionsMenu({
                         <select
                             value={fontFamily}
                             onChange={(e) => {
-                                if (supportedFonts.includes(e.target.value)) {
-                                    setFontFamily(e.target.value);
-                                    setIsLoading(true); // Assume font change requires loading
+                                for (const font of allFonts) {
+                                    if (font.name === e.target.value) {
+                                        setFontFamily(e.target.value);
+                                    }
                                 }
                             }}
                         >
-                            {supportedFonts.map((font) => {
+                            {allFonts.map((font) => {
                                 return (
-                                    <option key={font} value={font}>
-                                        {font}
+                                    <option
+                                        key={font.displayName}
+                                        value={font.name}
+                                    >
+                                        {font.displayName}
                                     </option>
                                 );
                             })}

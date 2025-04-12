@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import BokReader from "./components/BokReader/BokReader";
+import "./style.css";
 
 function App() {
     const epubUrl =
@@ -24,17 +25,24 @@ function App() {
         console.log(`BokReader isLoading: ${isLoading}`);
     }, []);
 
+    const supportedFonts = [
+        { name: "Inter", displayName: "Inter" },
+        { name: "Roboto", displayName: "Roboto" },
+        { name: "Merriweather", displayName: "Merriweather" },
+    ];
+
     return (
         <>
             {/* Directly render BokReader with the URL */}
             <div
-                style={{ width: "700px", height: "500px", overflow: "hidden" }}
+                style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
             >
                 <BokReader
                     epubDataSource={epubUrl}
                     onTitleChange={handleReaderTitleChange}
                     onError={handleReaderError}
                     onLoadingChange={handleReaderLoading}
+                    supportedFonts={supportedFonts}
                 />
             </div>
         </>
