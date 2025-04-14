@@ -160,9 +160,9 @@ export default function Book({
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            console.log(percentRead);
             if (event.key === "ArrowLeft") {
                 event.preventDefault();
-                console.log(pageWidth);
                 changePage(-1);
             } else if (event.key === "ArrowRight") {
                 event.preventDefault();
@@ -174,7 +174,7 @@ export default function Book({
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [changePage, pageWidth]);
+    }, [changePage, pageWidth, percentRead]);
 
     return (
         <>
