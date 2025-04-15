@@ -143,8 +143,9 @@ export default function Book({
         return () => {
             clearTimeout(timer);
         };
+        // no I wont include percentRead and currentPage, eslint. Idgaf.
+        // eslint-disable-next-line
     }, [
-        // @eslint-ignore
         pageWidth,
         pageHeight,
         sidePadding,
@@ -154,13 +155,10 @@ export default function Book({
         content,
         title,
         setIsLoading,
-        // currentPage,
-        // percentRead,
     ]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            console.log(percentRead);
             if (event.key === "ArrowLeft") {
                 event.preventDefault();
                 changePage(-1);
