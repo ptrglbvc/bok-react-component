@@ -1,6 +1,6 @@
 // src/hooks/useEpub.tsx
 import JSZip from "jszip";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 type BlobImages = { [key: string]: string };
 
@@ -10,11 +10,11 @@ export default function useEpub() {
     const [title, setTitle] = useState("");
     const [error, setError] = useState<string | null>(null);
 
-    let currentZip: JSZip | null = null;
     let currentObfFolder = "";
-    let currentImages: BlobImages = {};
     let currentStyle = "";
-    let styleLinkElement: HTMLLinkElement | null = null;
+    const currentZip = useRef<JSZip | null>(null);
+    const styleLinkElement = useRef<HTMLLinkElement | null>(null);
+    const currentImages: BlobImages = {};
 
     const validTypes = [
         "text/html",
@@ -30,14 +30,10 @@ export default function useEpub() {
             setRawContent("");
             setTitle("Loading...");
             setError(null);
-            currentZip = null;
-            currentObfFolder = "";
-            currentImages = {};
-            currentStyle = "";
-            if (styleLinkElement) {
-                document.head.removeChild(styleLinkElement);
-                URL.revokeObjectURL(styleLinkElement.href);
-                styleLinkElement = null;
+            if (styleLinkElement.current) {
+                document.head.removeChild(styleLinkElement.current);
+                URL.revokeObjectURL(styleLinkElement.current.href);
+                styleLinkElement.current = null;
             }
 
             try {
@@ -47,7 +43,7 @@ export default function useEpub() {
                     const response = await fetch(source);
                     if (!response.ok) {
                         throw new Error(
-                            `HTTP error! status: ${response.status} ${response.statusText}`
+                            `HTTP error! status: ${response.status} ${response.statusText}`,
                         );
                     }
                     buffer = await response.arrayBuffer();
@@ -61,11 +57,11 @@ export default function useEpub() {
 
                 if (!buffer || buffer.byteLength === 0) {
                     throw new Error(
-                        "EPUB source is empty or could not be read."
+                        "EPUB source is empty or could not be read.",
                     );
                 }
 
-                currentZip = await JSZip.loadAsync(buffer);
+                currentZip.current = await JSZip.loadAsync(buffer);
                 await readContainer();
             } catch (err: unknown) {
                 const errorMessage =
@@ -79,14 +75,15 @@ export default function useEpub() {
                 setIsLoading(false);
             }
         },
-        []
+        // eslint-disable-next-line
+        [],
     );
 
     async function readContainer() {
-        if (!currentZip) throw new Error("Zip not loaded");
+        if (!currentZip.current) throw new Error("Zip not loaded");
 
         const containerPath = "META-INF/container.xml";
-        const containerFile = currentZip.file(containerPath);
+        const containerFile = currentZip.current.file(containerPath);
         if (!containerFile)
             throw new Error("META-INF/container.xml not found.");
 
@@ -97,7 +94,7 @@ export default function useEpub() {
 
         currentObfFolder = opfPath.substring(0, opfPath.lastIndexOf("/") + 1);
 
-        const opfFile = currentZip.file(opfPath);
+        const opfFile = currentZip.current.file(opfPath);
         if (!opfFile) throw new Error(`OPF file not found at path: ${opfPath}`);
 
         const opfContent = await opfFile.async("text");
@@ -109,7 +106,7 @@ export default function useEpub() {
             throw new Error(
                 `Error parsing OPF file: ${
                     parserError.textContent || "Unknown XML parse error"
-                }`
+                }`,
             );
         }
 
@@ -121,10 +118,10 @@ export default function useEpub() {
         const parser = new DOMParser();
         const containerDOM = parser.parseFromString(
             containerContent,
-            "application/xml"
+            "application/xml",
         );
         const rootfile = containerDOM.querySelector(
-            'rootfile[media-type="application/oebps-package+xml"]'
+            'rootfile[media-type="application/oebps-package+xml"]',
         );
         const fullPath = rootfile?.getAttribute("full-path");
         return fullPath ?? null;
@@ -138,7 +135,7 @@ export default function useEpub() {
     }
 
     async function parseManifestAndSpine(opf: Document) {
-        if (!currentZip) return;
+        if (!currentZip.current) return;
 
         const manifestItems: { [id: string]: { href: string; type: string } } =
             {};
@@ -152,7 +149,7 @@ export default function useEpub() {
         });
 
         const spineRefs = Array.from(
-            opf.querySelectorAll("spine > itemref")
+            opf.querySelectorAll("spine > itemref"),
         ).map((ref) => ref.getAttribute("idref"));
 
         let combinedContent = "";
@@ -163,7 +160,7 @@ export default function useEpub() {
             const item = manifestItems[idref];
             if (item) {
                 const itemFetchPath = currentObfFolder + item.href;
-                const itemFile = currentZip.file(itemFetchPath);
+                const itemFile = currentZip.current.file(itemFetchPath);
                 if (
                     itemFile &&
                     (item.type.includes("html") || item.type.includes("xml"))
@@ -172,13 +169,13 @@ export default function useEpub() {
                         const itemContent = await itemFile.async("text");
                         const processedContent = await processContentItem(
                             itemContent,
-                            item.type
+                            item.type,
                         );
                         combinedContent += `<div class="bok-chapter">${processedContent}</div>`;
                     } catch (e) {
                         console.warn(
                             `Failed to process spine item ${itemFetchPath}:`,
-                            e
+                            e,
                         );
                     }
                 }
@@ -190,7 +187,7 @@ export default function useEpub() {
             if (item.type.includes("css")) {
                 const cssPath = currentObfFolder + item.href;
                 if (!loadedCssHrefs.has(cssPath)) {
-                    const cssFile = currentZip.file(cssPath);
+                    const cssFile = currentZip.current.file(cssPath);
                     if (cssFile) {
                         try {
                             currentStyle +=
@@ -210,7 +207,7 @@ export default function useEpub() {
 
     async function processContentItem(
         content: string,
-        type: string
+        type: string,
     ): Promise<string> {
         let processed = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
         processed = await cleanImages(processed, type);
@@ -221,7 +218,7 @@ export default function useEpub() {
 
     async function cleanImages(
         document: string,
-        type: string
+        type: string,
     ): Promise<string> {
         const parser = new DOMParser();
 
@@ -230,14 +227,14 @@ export default function useEpub() {
                 // Error handling for DOM parsing/serialization
                 const newDocument = parser.parseFromString(
                     document,
-                    type as DOMParserSupportedType
+                    type as DOMParserSupportedType,
                 );
                 const parserError = newDocument.querySelector("parsererror");
                 if (parserError) {
                     // Error handling for malformed HTML/XML
                     console.warn(
                         "Parser error in content item during cleanImages, skipping.",
-                        parserError.textContent
+                        parserError.textContent,
                     );
                     return document;
                 }
@@ -253,13 +250,13 @@ export default function useEpub() {
 
                 const seri = new XMLSerializer();
                 const newDoc = seri.serializeToString(
-                    newDocument.documentElement || newDocument
+                    newDocument.documentElement || newDocument,
                 );
                 return newDoc;
             } catch (error) {
                 console.error(
                     "Error during cleanImages DOM processing:",
-                    error
+                    error,
                 );
                 return document;
             }
@@ -274,7 +271,7 @@ export default function useEpub() {
         src = currentObfFolder + src;
 
         if (currentImages[src] === undefined) {
-            const imgFile = currentZip?.file(src); // Error handling: Check if file exists
+            const imgFile = currentZip.current?.file(src); // Error handling: Check if file exists
             if (imgFile) {
                 try {
                     // Error handling for blob creation
@@ -284,7 +281,7 @@ export default function useEpub() {
                 } catch (e) {
                     console.warn(
                         `Could not load image blob (formatImg) ${src}:`,
-                        e
+                        e,
                     );
                     currentImages[src] = ""; // Cache failure on error
                 }
@@ -304,7 +301,7 @@ export default function useEpub() {
         src = currentObfFolder + src;
 
         if (currentImages[src] === undefined) {
-            const imgFile = currentZip?.file(src); // Error handling: Check if file exists
+            const imgFile = currentZip.current?.file(src); // Error handling: Check if file exists
             if (imgFile) {
                 try {
                     // Error handling for blob creation
@@ -314,13 +311,13 @@ export default function useEpub() {
                 } catch (e) {
                     console.warn(
                         `Could not load image blob (formatXMLImage) ${src}:`,
-                        e
+                        e,
                     );
                     currentImages[src] = ""; // Cache failure on error
                 }
             } else {
                 console.warn(
-                    `Image file not found in zip (formatXMLImage): ${src}`
+                    `Image file not found in zip (formatXMLImage): ${src}`,
                 );
                 currentImages[src] = ""; // Cache failure if file not found
             }
@@ -334,11 +331,11 @@ export default function useEpub() {
         if (!currentStyle.trim()) return;
         const styleBlob = new Blob([currentStyle], { type: "text/css" });
         const blobURL = URL.createObjectURL(styleBlob);
-        styleLinkElement = document.createElement("link");
-        styleLinkElement.href = blobURL;
-        styleLinkElement.rel = "stylesheet";
-        styleLinkElement.setAttribute("data-bok-reader-style", "true");
-        document.head.appendChild(styleLinkElement);
+        styleLinkElement.current = document.createElement("link");
+        styleLinkElement.current.href = blobURL;
+        styleLinkElement.current.rel = "stylesheet";
+        styleLinkElement.current.setAttribute("data-bok-reader-style", "true");
+        document.head.appendChild(styleLinkElement.current);
     }
 
     return {
