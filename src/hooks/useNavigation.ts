@@ -4,7 +4,7 @@ import usePage from "./usePage";
 const useNavigation = (
     changePage: (n: number) => void,
     isOptionMenuVisible: boolean,
-    containerElementRef: React.RefObject<HTMLDivElement | null>,
+    containerElementRef: React.RefObject<HTMLDivElement | null>
 ) => {
     const [pageWidth, pageHeight] = usePage(containerElementRef);
     const longPressTimerRef = useRef<null | number>(null);
@@ -27,7 +27,7 @@ const useNavigation = (
                 }
             }
         },
-        [changePage, isOptionMenuVisible, pageWidth, pageHeight],
+        [changePage, isOptionMenuVisible, pageWidth, pageHeight]
     );
 
     useEffect(() => {

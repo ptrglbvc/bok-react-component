@@ -33,12 +33,12 @@ const ScopedGlobalStyle = createGlobalStyle`
         font-family: var(--font-family);
         padding: var(--top-padding) var(--side-padding) var(--bottom-padding);
         height: 100%;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0); // Keep stylistic choice
+        text-shadow: 2px 2px 5px rgba(0, 0, 0); 
         font-size: var(--font-size);
 
-        column-gap: calc(2 * var(--side-padding)); // Gap between columns
-        column-fill: auto; // MUST be auto for scrollWidth calculation to be correct
-        -moz-column-gap: calc(2 * var(--side-padding));
+        column-gap: calc(2 * var(--side-padding));
+        -webkit-column-fill: auto;
+        // column-fill: auto; // MUST be auto for scrollWidth calculation to be correct
         -webkit-column-gap: calc(2 * var(--side-padding));
 
         // Enable horizontal scrolling of the columns
@@ -46,9 +46,8 @@ const ScopedGlobalStyle = createGlobalStyle`
         overflow-y: hidden; // Prevent vertical scrollbar on the container itself
         scroll-snap-type: x mandatory; // Snap pages (columns)
         scroll-behavior: auto; // Let JS handle smooth scrolling during page turns
-        -webkit-overflow-scrolling: touch; // Momentum scroll on iOS
-        box-sizing: border-box; // Include padding in width/height calculations
-
+        -webkit-overflow-scrolling: touch;
+        box-sizing: border-box;
 
         scrollbar-width: none;
         -ms-overflow-style: none;
@@ -82,11 +81,7 @@ const ScopedGlobalStyle = createGlobalStyle`
 
     @container (aspect-ratio <= 1/1) {
         .book-page {
-            column-count: 1;
-            -moz-column-count: 1;
-            -webkit-column-count: 1;
-            column-width: 100%;
-            -webkit-column-width: 100%;
+            columns: var(--safari-is-stupid-width, 100%) auto;
 
             img, svg {
                 max-width: calc(100% - 2 * var(--side-padding)) !important;
@@ -158,14 +153,15 @@ interface BokReaderProps {
     className?: string;
     style?: React.CSSProperties;
     supportedFonts?: { displayName: string; name: string }[];
+    color?: string;
 }
 
 // Wrapper div for scoping styles and establishing positioning context
 const BokReaderWrapper = styled.div`
     width: 100%;
     height: 100%;
-    position: relative; /* Needed for absolute positioning of children like PageNumber/OptionsMenu */
-    overflow: hidden; /* Contain the scrolling book */
+    position: relative;d
+    overflow: hidden;d
     overflow-y: hidden;
 `;
 
@@ -176,6 +172,7 @@ const BokReader: React.FC<BokReaderProps> = ({
     onError,
     className,
     style,
+    color,
     supportedFonts = [],
 }) => {
     const { title, rawContent, isLoading, error, loadEpub, setIsLoading } =
@@ -218,13 +215,14 @@ const BokReader: React.FC<BokReaderProps> = ({
     // Use useMemo to prevent recalculating styles object on every render
     const dynamicCssVariables = useMemo(
         () => ({
+            "--color-tint": color,
             "--side-padding": `${sidePadding}px`,
             "--top-padding": "30px", // Example: make these configurable too if needed
             "--bottom-padding": "70px", // Example
             "--font-size": `${fontSize}em`,
             "--font-family": fontFamily,
         }),
-        [sidePadding, fontSize, fontFamily],
+        [sidePadding, fontSize, fontFamily]
     );
 
     // --- Render logic ---
@@ -252,7 +250,7 @@ const BokReader: React.FC<BokReaderProps> = ({
             ref={bokReaderWrapperRef}
         >
             <ScopedGlobalStyle />
-            <LoadingScreen isLoading={isLoading} />
+            <LoadingScreen isLoading={isLoading} color={color} />
 
             {/* Render Book only if content is ready and not loading */}
             {rawContent && (

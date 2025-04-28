@@ -59,19 +59,22 @@ export default function Book({
                     noOfPages > 0 &&
                     scrollContainer.clientWidth > 0
                 ) {
-                    const newValue = prev + amount;
-                    if (newValue >= 0 && newValue < pageCount) {
-                        scrollContainer.scroll({
-                            left: newValue * pageWidth,
-                            behavior: "smooth",
-                        });
-                        return newValue;
+                    let newValue = prev + amount;
+                    if (newValue < 0) newValue = 0;
+                    if (newValue >= pageCount) {
+                        newValue = pageCount - 1;
                     }
+
+                    scrollContainer.scroll({
+                        left: newValue * pageWidth * noOfPages,
+                        behavior: "smooth",
+                    });
+                    return newValue;
                 }
                 return prev;
             });
         },
-        [pageWidth, pageCount, noOfPages],
+        [pageWidth, pageCount, noOfPages]
     );
 
     useNavigation(changePage, isOptionMenuVisible, containerElementRef);
@@ -101,6 +104,11 @@ export default function Book({
         setCurrentPage(1);
     }, [title, setPercentRead, setFontSize, setPadding, setFontFamily]);
 
+    function isCloseToHalf(num: number, tol = 1e-6) {
+        const frac = num - Math.floor(num);
+        return Math.abs(frac - 0.5) < tol;
+    }
+
     useEffect(() => {
         const currentBookRef = bookRef.current;
         if (!currentBookRef || pageWidth <= 0 || pageHeight <= 0) return;
@@ -110,7 +118,7 @@ export default function Book({
         const timer = setTimeout(() => {
             currentBookRef.style.setProperty(
                 "--side-padding",
-                `${sidePadding}px`,
+                `${sidePadding}px`
             );
             currentBookRef.style.setProperty("--font-size", `${fontSize}em`);
             currentBookRef.style.setProperty("--font-family", fontFamily);
@@ -119,19 +127,23 @@ export default function Book({
             const totalWidth = currentBookRef.scrollWidth;
             const newPageCount =
                 pageWidth > 0 && totalWidth > 0
-                    ? Math.floor(totalWidth / pageWidth)
+                    ? Math.round(totalWidth / pageWidth)
                     : 0;
-            setPageCount(newPageCount);
+            // this is for 2 page view
+            const noOfWholePages =
+                noOfPages === 1 ? newPageCount : Math.round(newPageCount / 2);
+            setPageCount(noOfWholePages);
 
-            if (newPageCount > 0 && currentBookRef.clientWidth > 0) {
-                let targetPage = Math.round(newPageCount * percentRead);
+            if (noOfWholePages > 0 && currentBookRef.clientWidth > 0) {
+                let targetPage = Math.round(noOfWholePages * percentRead);
                 targetPage = Math.max(
                     0,
-                    Math.min(newPageCount - 1, targetPage),
+                    Math.min(noOfWholePages - 1, targetPage)
                 );
                 if (currentPage !== targetPage) {
                     setCurrentPage(targetPage);
-                    currentBookRef.scrollLeft = targetPage * pageWidth;
+                    currentBookRef.scrollLeft =
+                        targetPage * pageWidth * noOfPages;
                 }
             } else {
                 setIsLoading(false);

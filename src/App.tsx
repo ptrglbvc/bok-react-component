@@ -10,7 +10,6 @@ function App() {
         if (title && title !== "Loading...") {
             document.title = title; // Update the browser tab title
         } else {
-            // Reset to default if title is empty or just "Loading..."
             document.title = "Bok";
         }
     }, []);
@@ -33,9 +32,14 @@ function App() {
 
     return (
         <>
-            {/* Directly render BokReader with the URL */}
             <div
-                style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
+                style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "hidden",
+                    // @ts-expect-error sorry ts, we need this stupid thing for stupid safari
+                    "--safari-is-stupid-width": "100vw",
+                }}
             >
                 <BokReader
                     epubDataSource={epubUrl}
@@ -43,6 +47,7 @@ function App() {
                     onError={handleReaderError}
                     onLoadingChange={handleReaderLoading}
                     supportedFonts={supportedFonts}
+                    color={"#7744aa"}
                 />
             </div>
         </>
