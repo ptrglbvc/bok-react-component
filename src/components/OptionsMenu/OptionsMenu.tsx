@@ -31,8 +31,8 @@ function OptionsMenu({
     const paddingValueRef = useRef<HTMLSpanElement>(null);
 
     const allFonts = [
-        ...supportedFonts,
         { displayName: "System Default", name: "system-ui" },
+        ...supportedFonts,
     ];
 
     useEffect(() => {

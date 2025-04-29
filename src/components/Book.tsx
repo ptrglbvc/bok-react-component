@@ -104,10 +104,10 @@ export default function Book({
         setCurrentPage(1);
     }, [title, setPercentRead, setFontSize, setPadding, setFontFamily]);
 
-    function isCloseToHalf(num: number, tol = 1e-6) {
-        const frac = num - Math.floor(num);
-        return Math.abs(frac - 0.5) < tol;
-    }
+    // function isCloseToHalf(num: number, tol = 1e-6) {
+    //     const frac = num - Math.floor(num);
+    //     return Math.abs(frac - 0.5) < tol;
+    // }
 
     useEffect(() => {
         const currentBookRef = bookRef.current;
