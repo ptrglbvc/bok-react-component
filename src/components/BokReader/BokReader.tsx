@@ -14,7 +14,7 @@ const ScopedGlobalStyle = createGlobalStyle`
     font-weight: 400;
     text-align: justify;
     color-scheme: dark light;
-    color: rgb(215, 215, 215);
+    color: rgb(215, 215, 215) !important;
     background-color: black;
     height: 100%;
     width: 100%;
@@ -61,6 +61,9 @@ const ScopedGlobalStyle = createGlobalStyle`
               page-break-inside: avoid; /* Older alias */
               -webkit-column-break-inside: avoid;
          }
+        p {
+            color: 
+        }
     }
 
     @container (aspect-ratio > 1/1) {

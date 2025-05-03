@@ -4,7 +4,7 @@ import "./style.css";
 
 function App() {
     const epubUrl =
-        "https://43ru4bvzl6.ufs.sh/f/7NUfZePLME3PVayx92gCYZpXUfVbdrqmaLk98HEcRth34Ko1";
+        "https://43ru4bvzl6.ufs.sh/f/7NUfZePLME3PGsuLJP1sHM5apItUSebxhDZTPWk6fyL3vAB1";
 
     const handleReaderTitleChange = useCallback((title: string) => {
         if (title && title !== "Loading...") {
@@ -20,9 +20,7 @@ function App() {
         console.error("Failed to load from URL, cannot automatically reset.");
     }, []);
 
-    const handleReaderLoading = useCallback((isLoading: boolean) => {
-        console.log(`BokReader isLoading: ${isLoading}`);
-    }, []);
+    const handleReaderLoading = useCallback((isLoading: boolean) => {}, []);
 
     const supportedFonts = [
         { name: "Inter", displayName: "Inter" },

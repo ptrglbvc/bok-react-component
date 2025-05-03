@@ -43,7 +43,7 @@ export default function useEpub() {
                     const response = await fetch(source);
                     if (!response.ok) {
                         throw new Error(
-                            `HTTP error! status: ${response.status} ${response.statusText}`,
+                            `HTTP error! status: ${response.status} ${response.statusText}`
                         );
                     }
                     buffer = await response.arrayBuffer();
@@ -57,7 +57,7 @@ export default function useEpub() {
 
                 if (!buffer || buffer.byteLength === 0) {
                     throw new Error(
-                        "EPUB source is empty or could not be read.",
+                        "EPUB source is empty or could not be read."
                     );
                 }
 
@@ -76,7 +76,7 @@ export default function useEpub() {
             }
         },
         // eslint-disable-next-line
-        [],
+        []
     );
 
     async function readContainer() {
@@ -106,7 +106,7 @@ export default function useEpub() {
             throw new Error(
                 `Error parsing OPF file: ${
                     parserError.textContent || "Unknown XML parse error"
-                }`,
+                }`
             );
         }
 
@@ -118,10 +118,10 @@ export default function useEpub() {
         const parser = new DOMParser();
         const containerDOM = parser.parseFromString(
             containerContent,
-            "application/xml",
+            "application/xml"
         );
         const rootfile = containerDOM.querySelector(
-            'rootfile[media-type="application/oebps-package+xml"]',
+            'rootfile[media-type="application/oebps-package+xml"]'
         );
         const fullPath = rootfile?.getAttribute("full-path");
         return fullPath ?? null;
@@ -149,7 +149,7 @@ export default function useEpub() {
         });
 
         const spineRefs = Array.from(
-            opf.querySelectorAll("spine > itemref"),
+            opf.querySelectorAll("spine > itemref")
         ).map((ref) => ref.getAttribute("idref"));
 
         let combinedContent = "";
@@ -169,13 +169,13 @@ export default function useEpub() {
                         const itemContent = await itemFile.async("text");
                         const processedContent = await processContentItem(
                             itemContent,
-                            item.type,
+                            item.type
                         );
                         combinedContent += `<div class="bok-chapter">${processedContent}</div>`;
                     } catch (e) {
                         console.warn(
                             `Failed to process spine item ${itemFetchPath}:`,
-                            e,
+                            e
                         );
                     }
                 }
@@ -207,18 +207,64 @@ export default function useEpub() {
 
     async function processContentItem(
         content: string,
-        type: string,
+        type: string
     ): Promise<string> {
+        // in some epubs the css is in the xhtml/file. sneaky fuckers
+        // we want to process it before giving it free reign
+        let allCss = [...content.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
+            .map((m) => m[1])
+            .join("\n");
+
+        allCss = stripUnneededRules(allCss);
+
+        currentStyle += allCss;
         let processed = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
         processed = await cleanImages(processed, type);
         return processed;
+    }
+
+    function stripUnneededRules(allCss: string): string {
+        // linine css could easily fuck things up for us, we don't want that
+        const enemiesOfTheState = [
+            "background-color",
+            "color",
+            "font-size",
+            "font-family",
+            "font-weight",
+            "line-height",
+            "text-align",
+        ];
+
+        return allCss
+            .split(/}/)
+            .map((block: string) => {
+                const parts = block.split(/{/);
+                const selectors = parts[0];
+                const decls = parts[1];
+                if (!decls) return "";
+
+                const filtered = decls
+                    .split(/;/)
+                    .map((d: string) => d.trim())
+                    .filter((d: string) => {
+                        if (!d) return false;
+                        return !enemiesOfTheState.some((prop) =>
+                            new RegExp(`^${prop}\s*:`, "i").test(d)
+                        );
+                    })
+                    .join("; ");
+
+                return filtered ? `${selectors.trim()} { ${filtered}; }` : "";
+            })
+            .filter((rule: string) => Boolean(rule))
+            .join("\n");
     }
 
     // --- Image Logic with Error Handling ---
 
     async function cleanImages(
         document: string,
-        type: string,
+        type: string
     ): Promise<string> {
         const parser = new DOMParser();
 
@@ -227,14 +273,14 @@ export default function useEpub() {
                 // Error handling for DOM parsing/serialization
                 const newDocument = parser.parseFromString(
                     document,
-                    type as DOMParserSupportedType,
+                    type as DOMParserSupportedType
                 );
                 const parserError = newDocument.querySelector("parsererror");
                 if (parserError) {
                     // Error handling for malformed HTML/XML
                     console.warn(
                         "Parser error in content item during cleanImages, skipping.",
-                        parserError.textContent,
+                        parserError.textContent
                     );
                     return document;
                 }
@@ -250,13 +296,13 @@ export default function useEpub() {
 
                 const seri = new XMLSerializer();
                 const newDoc = seri.serializeToString(
-                    newDocument.documentElement || newDocument,
+                    newDocument.documentElement || newDocument
                 );
                 return newDoc;
             } catch (error) {
                 console.error(
                     "Error during cleanImages DOM processing:",
-                    error,
+                    error
                 );
                 return document;
             }
@@ -281,7 +327,7 @@ export default function useEpub() {
                 } catch (e) {
                     console.warn(
                         `Could not load image blob (formatImg) ${src}:`,
-                        e,
+                        e
                     );
                     currentImages[src] = ""; // Cache failure on error
                 }
@@ -311,13 +357,13 @@ export default function useEpub() {
                 } catch (e) {
                     console.warn(
                         `Could not load image blob (formatXMLImage) ${src}:`,
-                        e,
+                        e
                     );
                     currentImages[src] = ""; // Cache failure on error
                 }
             } else {
                 console.warn(
-                    `Image file not found in zip (formatXMLImage): ${src}`,
+                    `Image file not found in zip (formatXMLImage): ${src}`
                 );
                 currentImages[src] = ""; // Cache failure if file not found
             }

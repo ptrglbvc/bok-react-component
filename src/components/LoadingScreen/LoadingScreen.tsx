@@ -10,7 +10,6 @@ export default function LoadingScreen({
     isLoading,
     color,
 }: LoadingScreenProps) {
-    console.log("loading screen component mounted, you just fucked up the css");
     return (
         <div
             className={
