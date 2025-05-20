@@ -20,7 +20,7 @@ function App() {
         console.error("Failed to load from URL, cannot automatically reset.");
     }, []);
 
-    const handleReaderLoading = useCallback((isLoading: boolean) => {}, []);
+    const handleReaderLoading = useCallback((_isLoading: boolean) => {}, []);
 
     const supportedFonts = [
         { name: "Inter", displayName: "Inter" },
