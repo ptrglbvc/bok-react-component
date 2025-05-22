@@ -21,6 +21,7 @@ interface PageProps {
     fontFamily: string;
     sidePadding: number;
     setFontSize: React.Dispatch<React.SetStateAction<number>>;
+    showTutorial: boolean;
     setPadding: React.Dispatch<React.SetStateAction<number>>;
     setFontFamily: React.Dispatch<React.SetStateAction<string>>;
     isOptionMenuVisible: boolean;
@@ -39,6 +40,7 @@ export default function Book({
     setPadding,
     setFontFamily,
     containerElementRef,
+    showTutorial,
 }: PageProps) {
     const bookRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +79,12 @@ export default function Book({
         [pageWidth, pageCount, noOfPages]
     );
 
-    useNavigation(changePage, isOptionMenuVisible, containerElementRef);
+    useNavigation(
+        changePage,
+        isOptionMenuVisible,
+        containerElementRef,
+        showTutorial
+    );
 
     useEffect(() => {
         if (!title) return;

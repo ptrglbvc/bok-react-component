@@ -32,8 +32,8 @@ function App() {
         <>
             <div
                 style={{
-                    width: "100vw",
-                    height: "100vh",
+                    width: "100svw",
+                    height: "100svh",
                     overflow: "hidden",
                     // @ts-expect-error sorry ts, we need this stupid thing for stupid safari
                     "--safari-is-stupid-width": "100vw",
@@ -45,7 +45,7 @@ function App() {
                     onError={handleReaderError}
                     onLoadingChange={handleReaderLoading}
                     supportedFonts={supportedFonts}
-                    color={"#7744aa"}
+                    color={"#c9f"}
                 />
             </div>
         </>

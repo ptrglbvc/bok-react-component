@@ -4,7 +4,8 @@ import usePage from "./usePage";
 const useNavigation = (
     changePage: (n: number) => void,
     isOptionMenuVisible: boolean,
-    containerElementRef: React.RefObject<HTMLDivElement | null>
+    containerElementRef: React.RefObject<HTMLDivElement | null>,
+    showTutorial: boolean
 ) => {
     const [pageWidth, pageHeight] = usePage(containerElementRef);
     const longPressTimerRef = useRef<null | number>(null);
@@ -12,7 +13,7 @@ const useNavigation = (
 
     const handlePageClick = useCallback(
         (tapWidth: number, tapHeight: number) => {
-            if (!isOptionMenuVisible) {
+            if (!isOptionMenuVisible && !showTutorial) {
                 if (
                     tapWidth / pageWidth <= 0.4 &&
                     tapHeight / pageHeight < 0.8

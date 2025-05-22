@@ -5,6 +5,7 @@ import useEpub from "../../hooks/useEpub"; // Import the modified hook
 import Book from "../Book";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
+import TutorialOverlay from "./TutorialOverlay";
 
 // These styles apply *only* within BokReaderWrapper thanks to styled-components scoping
 const ScopedGlobalStyle = createGlobalStyle`
@@ -168,6 +169,21 @@ const BokReaderWrapper = styled.div`
     overflow-y: hidden;
 `;
 
+// Simple persistent flag hook for tutorial overlay
+function usePersistentFlag(
+    key: string,
+    defaultValue: boolean
+): [boolean, (v: boolean) => void] {
+    const [value, setValue] = useState(() => {
+        const stored = localStorage.getItem(key);
+        return stored === null ? defaultValue : stored === "true";
+    });
+    useEffect(() => {
+        localStorage.setItem(key, value ? "true" : "false");
+    }, [key, value]);
+    return [value, setValue];
+}
+
 const BokReader: React.FC<BokReaderProps> = ({
     epubDataSource,
     onTitleChange,
@@ -187,6 +203,23 @@ const BokReader: React.FC<BokReaderProps> = ({
     const [fontFamily, setFontFamily] = useState("Inter");
 
     const bokReaderWrapperRef = useRef<HTMLDivElement>(null);
+
+    // Tutorial overlay state (localStorage)
+    const [tutorialShown, setTutorialShown] = usePersistentFlag(
+        "bokreader_tutorial_shown",
+        false
+    );
+    const [showTutorial, setShowTutorial] = useState(!tutorialShown);
+
+    useEffect(() => {
+        if (tutorialShown) setShowTutorial(false);
+    }, [tutorialShown]);
+
+    // Dismiss tutorial and set localStorage
+    const dismissTutorial = () => {
+        setShowTutorial(false);
+        setTutorialShown(true);
+    };
 
     useEffect(() => {
         if (epubDataSource) {
@@ -255,9 +288,18 @@ const BokReader: React.FC<BokReaderProps> = ({
             <ScopedGlobalStyle />
             <LoadingScreen isLoading={isLoading} color={color} />
 
+            {/* Tutorial Overlay (only on first load) */}
+
             {/* Render Book only if content is ready and not loading */}
             {rawContent && (
                 <>
+                    {/* Only show tutorial overlay when not loading */}
+                    {showTutorial && !isLoading && (
+                        <TutorialOverlay
+                            color={color}
+                            onDismiss={dismissTutorial}
+                        />
+                    )}
                     <Book
                         content={rawContent}
                         title={title}
@@ -270,6 +312,7 @@ const BokReader: React.FC<BokReaderProps> = ({
                         setFontFamily={setFontFamily}
                         isOptionMenuVisible={isOptionsMenuVisible} // For navigation hook inside Book
                         containerElementRef={bokReaderWrapperRef} // Remove non-null assertion
+                        showTutorial={showTutorial}
                     />
 
                     {/* Render Options Menu when visible */}
@@ -290,7 +333,10 @@ const BokReader: React.FC<BokReaderProps> = ({
                     {!isOptionsMenuVisible && (
                         <div
                             className="bottom-click-area"
-                            onClick={() => setIsOptionsMenuVisible(true)}
+                            onClick={() => {
+                                if (!showTutorial)
+                                    setIsOptionsMenuVisible(true);
+                            }}
                             aria-label="Open reader options"
                         />
                     )}
