@@ -79,7 +79,6 @@ const ScopedGlobalStyle = createGlobalStyle`
                 max-width: calc(100% - 2 * var(--side-padding)) !important;
                 margin-bottom: 10px;
             }
-
         }
     }
 
