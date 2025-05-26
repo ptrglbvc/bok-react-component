@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import BokReader from "./components/BokReader/BokReader";
+import BokReader from "../src/components/BokReader/BokReader";
 import "./style.css";
 
 function App() {
